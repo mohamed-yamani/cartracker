@@ -1,14 +1,15 @@
 import 'dart:async';
 
+import 'package:carlock/constants/urls.dart';
 import 'package:carlock/model/latestLocalisation.dart';
 import 'package:carlock/repository/localisation.dart';
 import 'package:carlock/repository/user_patch.dart';
+import 'package:carlock/services/update_location_only_if_location_changes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:print_color/print_color.dart';
-import 'dart:typed_data';
 
 import 'package:share/share.dart';
 
@@ -33,10 +34,14 @@ class MapSampleState extends State<MapSample> {
   bool updateZoom = true;
   bool liveLocalisation = false;
   bool mapCarte = false;
+  UpdateLocationOnlyIfLocationChanges updateLocationOnlyIfLocationChanges =
+      UpdateLocationOnlyIfLocationChanges();
+  var location;
+  bool firstTime = true;
+  LatestLocalisation? latestLocalisation;
 
   @override
   void initState() {
-    // TODO: implement initState
     sendNewLocation();
     updateCarPosition();
     super.initState();
@@ -44,17 +49,18 @@ class MapSampleState extends State<MapSample> {
 
   void updateCarPosition() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      setState(() {
-        getCurrontLocation();
-      });
+      if (mounted) {
+        setState(() {
+          getCurrontLocation();
+        });
+      }
     });
   }
 
   @override
   void dispose() {
-    if (_locationSubscription != null) {
-      _locationSubscription.cancel();
-    }
+    _locationSubscription.cancel();
+
     _timer.cancel();
     // _locationSubscription.di
     _controller?.dispose();
@@ -88,6 +94,27 @@ class MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
+        title: const Text('carte'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              Share.share(
+                  '$googleShareLocation${latestLocalisation?.latitude},${latestLocalisation?.longitude}');
+            },
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           GoogleMap(
@@ -98,11 +125,11 @@ class MapSampleState extends State<MapSample> {
               _controller = controller;
               // _onMapCreated(controller);
             },
-            onLongPress: (LatLng latLng) {
-              //share location
-              Share.share(
-                  'https://www.google.com/maps/search/?api=1&query=${latLng.latitude},${latLng.longitude}');
-            },
+            // onLongPress: (LatLng latLng) {
+            //   //share location
+            //   Share.share(
+            //       '$googleShareLocation${latLng.latitude},${latLng.longitude}');
+            // },
             // ignore: unnecessary_null_comparison
             markers: Set.of((marker != null) ? [marker!] : []),
             // ignore: unnecessary_null_comparison
@@ -123,7 +150,7 @@ class MapSampleState extends State<MapSample> {
               });
             },
           ),
-          const ReturnButton(),
+          // const ReturnButton(),
           Container(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -182,14 +209,16 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Future<Uint8List> getMarker() async {
-    ByteData byteData =
-        await DefaultAssetBundle.of(context).load('assets/images/marker.png');
-    return byteData.buffer.asUint8List();
-  }
+  // Future<Uint8List> getMarker() async {
+  //   ByteData byteData =
+  //       await DefaultAssetBundle.of(context).load('assets/images/marker.png');
+  //   return byteData.buffer.asUint8List();
+  // }
 
   void updateMarkerAndCircle(
-      LatestLocalisation latestLocalisation, Uint8List markerImageData) {
+    latestLocalisation,
+    // Uint8List markerImageData
+  ) {
     LatLng latLng = LatLng(double.parse(latestLocalisation.latitude!),
         double.parse(latestLocalisation.longitude!));
 
@@ -229,19 +258,28 @@ class MapSampleState extends State<MapSample> {
   }
 
   Future<void> sendNewLocation() async {
-    var location = await _location.getLocation();
+    location = await _location.getLocation();
+    firstTime = false;
 
     _locationSubscription =
         _location.onLocationChanged.listen((locationx) async {
-      await userPatchLatLng!.updateCurrentUserInformation(
-        LatLng(
-          double.parse((location.latitude!).toStringAsFixed(5)),
-          double.parse((location.longitude!).toStringAsFixed(5)),
-        ),
-      );
-      updateCarPosition();
+      try {
+        // bool localisationChanged = await updateLocationOnlyIfLocationChanges
+        //     .handleLocationUpdate(Localisation(
+        //         locationx.latitude.toString(), locationx.longitude.toString()));
+        // localisationChanged = true;
 
-      Print.red('location updated');
+        await userPatchLatLng!.updateCurrentUserInformation(
+          LatLng(
+            double.parse((location.latitude!).toStringAsFixed(5)),
+            double.parse((location.longitude!).toStringAsFixed(5)),
+          ),
+        );
+        updateCarPosition();
+        Print.red('location updated');
+      } catch (e) {
+        Print.red('location not updated');
+      }
     });
 
     updateZoom = true;
@@ -249,14 +287,13 @@ class MapSampleState extends State<MapSample> {
 
   Future<void> getCurrontLocation() async {
     try {
-      Uint8List markerImageData = await getMarker();
+      // Uint8List markerImageData = await getMarker();
 
-      LatestLocalisation latestLocalisation =
-          await ApiLocalisation().getlatestlocalisation();
+      latestLocalisation = await ApiLocalisation().getlatestlocalisation();
 
       updateMarkerAndCircle(
         latestLocalisation,
-        markerImageData,
+        // markerImageData,
       );
 
       if (_controller != null) {
@@ -265,17 +302,18 @@ class MapSampleState extends State<MapSample> {
           CameraUpdate.newCameraPosition(
             CameraPosition(
               bearing: 192.8334901395799,
-              target: LatLng(double.parse(latestLocalisation.latitude!),
-                  double.parse(latestLocalisation.longitude!)),
+              target: LatLng(double.parse(latestLocalisation!.latitude!),
+                  double.parse(latestLocalisation!.longitude!)),
               tilt: 0,
               zoom: updateZoom ? 15 : zoom,
             ),
           ),
         );
+        
         updateZoom = false;
         updateMarkerAndCircle(
           latestLocalisation,
-          markerImageData,
+          // markerImageData,
         );
       }
     } on PlatformException catch (e) {
@@ -285,6 +323,38 @@ class MapSampleState extends State<MapSample> {
     }
   }
 }
+
+// class ReturnButton extends StatelessWidget {
+//   const ReturnButton({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       alignment: Alignment.topLeft,
+//       margin: const EdgeInsets.only(top: 40, left: 10),
+//       height: 45.0,
+//       width: 45.0,
+//       child: FittedBox(
+//         child: FloatingActionButton(
+//           backgroundColor: Theme.of(context).primaryColor.withOpacity(0.9),
+//           elevation: 0,
+//           onPressed: () {
+//             Navigator.of(context).pop();
+//           },
+//           child: const Padding(
+//             padding: EdgeInsets.only(left: 8.0),
+//             child: Icon(
+//               Icons.arrow_back_ios,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 
 // class ButtonTextNewPosition extends StatelessWidget {
 //   const ButtonTextNewPosition({
@@ -337,34 +407,3 @@ class MapSampleState extends State<MapSample> {
 //     );
 //   }
 // }
-
-class ReturnButton extends StatelessWidget {
-  const ReturnButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      margin: const EdgeInsets.only(top: 40, left: 10),
-      height: 45.0,
-      width: 45.0,
-      child: FittedBox(
-        child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.9),
-          elevation: 0,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Padding(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Icon(
-              Icons.arrow_back_ios,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

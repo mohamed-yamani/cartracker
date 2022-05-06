@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">174550626286-cham0h5ggmiiff3tu8npqbdhpuopfc3n.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">174550626286</string>
+    <string name="google_api_key" translatable="false">AIzaSyBvQydGEJu-A0GlXR0KPEwmAHxPtJ32Irk</string>
+    <string name="google_app_id" translatable="false">1:174550626286:android:449e364c077c7dfa31a8ff</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBvQydGEJu-A0GlXR0KPEwmAHxPtJ32Irk</string>
+    <string name="google_storage_bucket" translatable="false">carlock-b75fe.appspot.com</string>
+    <string name="project_id" translatable="false">carlock-b75fe</string>
+</resources>

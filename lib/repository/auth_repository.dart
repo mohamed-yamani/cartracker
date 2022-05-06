@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:carlock/constants/urls.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:http/http.dart' as http;
 import 'package:print_color/print_color.dart';
@@ -8,16 +9,16 @@ class AuthRepository {
     late final response;
 
     if (username.isEmpty || password.isEmpty) {
-      throw Exception('Username or password is empty');
+      throw Exception('Username ou mot de passe vide');
     }
 
     if (username.length < 3 || password.length < 3) {
-      throw Exception('Username or password is too short');
+      throw Exception('Username ou mot de passe trop court');
     }
 
     try {
       response = await http.post(
-        Uri.parse('https://matricule.icebergtech.net/api/token-auth/'),
+        Uri.parse(urlLogin),
         headers: {},
         body: {
           'username': username,
@@ -25,7 +26,7 @@ class AuthRepository {
         },
       );
     } catch (e) {
-      throw Exception('please check your internet connection');
+      throw Exception('s\'il vous plait verifier votre connexion internet');
     }
     if (response.statusCode == 200) {
       final responseJson = json.decode(response.body);
