@@ -299,8 +299,8 @@ class MapSampleState extends State<MapSample> {
 
         await userPatchLatLng!.updateCurrentUserInformation(
           LatLng(
-            double.parse((location.latitude!).toStringAsFixed(5)),
-            double.parse((location.longitude!).toStringAsFixed(5)),
+            double.parse((location.latitude!).toStringAsFixed(4)),
+            double.parse((location.longitude!).toStringAsFixed(4)),
           ),
         );
         updateCarPosition();

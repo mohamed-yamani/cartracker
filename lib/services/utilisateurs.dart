@@ -4,6 +4,7 @@ import 'package:carlock/model/utilisateurs_model.dart';
 import 'package:carlock/repository/matches_repository.dart';
 import 'package:carlock/repository/utilisateurs_repository.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:print_color/print_color.dart';
 
 class UtilisateursServices {
   Future<UtilisateursModel> getAll(final String username) {
@@ -11,6 +12,7 @@ class UtilisateursServices {
         UtilisateursRepository().getUtilisateursFromWebService();
 
     // return matches;
+    Print.red('youssra test');
     try {
       return matches;
     } on Exception catch (e) {

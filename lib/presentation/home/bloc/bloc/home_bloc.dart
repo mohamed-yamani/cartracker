@@ -5,6 +5,7 @@ import 'package:carlock/repository/patch_reg_id_to_webserver.dart';
 import 'package:carlock/services/authentication.dart';
 import 'package:carlock/services/matches.dart';
 import 'package:carlock/services/reg_id/firebase_conf.dart';
+import 'package:carlock/services/utilisateurs.dart';
 import 'package:equatable/equatable.dart';
 import 'package:print_color/print_color.dart';
 
@@ -15,7 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AuthenticationService _auth;
   final MatchesServices _matchesService;
 
-  HomeBloc(this._auth, this._matchesService)
+  HomeBloc(this._auth, this._matchesService, UtilisateursServices of)
       : super(RegisteringServiceState()) {
     on<LoginEvent>((event, emitter) async {
       try {

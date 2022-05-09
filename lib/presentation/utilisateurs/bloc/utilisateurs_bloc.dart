@@ -1,13 +1,40 @@
 import 'package:bloc/bloc.dart';
+import 'package:carlock/model/token.dart';
+import 'package:carlock/model/utilisateurs_model.dart';
+import 'package:carlock/repository/save_get_token.dart';
+import 'package:carlock/repository/utilisateurs_repository.dart';
+import 'package:carlock/services/utilisateurs.dart';
 import 'package:equatable/equatable.dart';
 
 part 'utilisateurs_event.dart';
 part 'utilisateurs_state.dart';
 
 class UtilisateursBloc extends Bloc<UtilisateursEvent, UtilisateursState> {
-  UtilisateursBloc() : super(UtilisateursInitial()) {
-    on<UtilisateursEvent>((event, emit) {
-      // TODO: implement event handler
+  final UtilisateursServices utilisatorService;
+  final repo = UtilisateursRepository();
+
+  UtilisateursBloc(this.utilisatorService) : super(UtilisateursInitial()) {
+    on<LoadUtilisateursEvent>((event, emit) async {
+      emit(UtilisateursLoadingState());
+      try {
+        UtilisateursModel utilisateurs =
+            await utilisatorService.getAll(event.username);
+        TokenModel? user = await getToken();
+        emit(UtilisateursLoadedState(utilisateurs, user));
+      } catch (e) {
+        emit(UtilisateursErrorState(e.toString()));
+      }
+    });
+    on<UtilisateursRefreshEvent>((event, emit) async {
+      emit(UtilisateursLoadingState());
+      try {
+        UtilisateursModel utilisateurs =
+            await utilisatorService.getAll(event.username);
+        TokenModel? user = await getToken();
+        emit(UtilisateursLoadedState(utilisateurs, user));
+      } catch (e) {
+        emit(UtilisateursErrorState(e.toString()));
+      }
     });
   }
 }

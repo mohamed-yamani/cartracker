@@ -78,6 +78,7 @@ MERGED from [:google_maps_flutter] C:\Users\1337\Desktop\carlock\build\google_ma
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\1337\Desktop\carlock\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:firebase_messaging] C:\Users\1337\Desktop\carlock\build\firebase_messaging\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-46:12
 MERGED from [:flutter_keyboard_visibility] C:\Users\1337\Desktop\carlock\build\flutter_keyboard_visibility\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:webview_flutter_android] C:\Users\1337\Desktop\carlock\build\webview_flutter_android\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:flutter_local_notifications] C:\Users\1337\Desktop\carlock\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-28:12
 MERGED from [:network_info_plus] C:\Users\1337\Desktop\carlock\build\network_info_plus\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-10:12
 MERGED from [:location] C:\Users\1337\Desktop\carlock\build\location\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-18:12
@@ -102,6 +103,7 @@ MERGED from [com.google.android.gms:play-services-measurement-impl:20.1.2] C:\Us
 MERGED from [com.google.android.gms:play-services-stats:17.0.2] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\b4e864bab4553d5323ce839090d479d8\jetified-play-services-stats-17.0.2\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\9282877ffeb1b0981ed0a64079135cc6\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\b5df26425706aa7787398968369730bb\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.webkit:webkit:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\f369d5a7dbb65b594fe8a7a54d349f94\webkit-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core-ktx:1.3.2] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\13fa3fe94946cec211252ced5fd4dc25\jetified-core-ktx-1.3.2\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.media:media:1.1.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\81cac9e8b615c7eae03b9861c05b52e4\media-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.android.gms:play-services-maps:18.0.2] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\2a3da9491eb53da9e05c86312df62727\jetified-play-services-maps-18.0.2\AndroidManifest.xml:17:1-44:12
@@ -246,6 +248,8 @@ MERGED from [:firebase_messaging] C:\Users\1337\Desktop\carlock\build\firebase_m
 MERGED from [:firebase_messaging] C:\Users\1337\Desktop\carlock\build\firebase_messaging\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_keyboard_visibility] C:\Users\1337\Desktop\carlock\build\flutter_keyboard_visibility\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_keyboard_visibility] C:\Users\1337\Desktop\carlock\build\flutter_keyboard_visibility\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:webview_flutter_android] C:\Users\1337\Desktop\carlock\build\webview_flutter_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:webview_flutter_android] C:\Users\1337\Desktop\carlock\build\webview_flutter_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_local_notifications] C:\Users\1337\Desktop\carlock\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_local_notifications] C:\Users\1337\Desktop\carlock\build\flutter_local_notifications\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:network_info_plus] C:\Users\1337\Desktop\carlock\build\network_info_plus\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
@@ -294,6 +298,8 @@ MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\1337\.gra
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\9282877ffeb1b0981ed0a64079135cc6\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\b5df26425706aa7787398968369730bb\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\b5df26425706aa7787398968369730bb\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.webkit:webkit:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\f369d5a7dbb65b594fe8a7a54d349f94\webkit-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.webkit:webkit:1.0.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\f369d5a7dbb65b594fe8a7a54d349f94\webkit-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core-ktx:1.3.2] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\13fa3fe94946cec211252ced5fd4dc25\jetified-core-ktx-1.3.2\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.core:core-ktx:1.3.2] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\13fa3fe94946cec211252ced5fd4dc25\jetified-core-ktx-1.3.2\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.media:media:1.1.0] C:\Users\1337\.gradle\caches\transforms-2\files-2.1\81cac9e8b615c7eae03b9861c05b52e4\media-1.1.0\AndroidManifest.xml:20:5-22:41

@@ -1,96 +1,120 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
-import 'package:carlock/model/matches_model.dart';
-import 'package:carlock/services/matches.dart';
+import 'package:carlock/model/utilisateurs_model.dart';
+import 'package:carlock/presentation/utilisateurs/bloc/utilisateurs_bloc.dart';
+import 'package:carlock/services/utilisateurs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:print_color/print_color.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class UtilisateursPage extends StatelessWidget {
+class UtilisateursPage extends StatefulWidget {
   const UtilisateursPage({Key? key}) : super(key: key);
+
+  @override
+  State<UtilisateursPage> createState() => _UtilisateursPageState();
+}
+
+class _UtilisateursPageState extends State<UtilisateursPage> {
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 25,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-        ),
-        centerTitle: true,
-        title: const Text(
-          'Page Des Utilisateurs',
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: OfflineBuilder(
-        connectivityBuilder: (
-          BuildContext context,
-          ConnectivityResult connectivity,
-          Widget child,
-        ) {
-          final bool connected = connectivity != ConnectivityResult.none;
-
-          if (connected) {
-            return const UtilisateursPageBody();
-          }
-          return Container(
-            color: Colors.white,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/caveman.gif',
-                    width: 600,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Veuillez vérifier votre connexion internet',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                ],
-              ),
+        appBar: AppBar(
+          actions: [
+            //button pour actualiser la liste
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                final itemsBloc = BlocProvider.of<UtilisateursBloc>(context)
+                  ..add(const UtilisateursRefreshEvent(
+                    '',
+                  ));
+                itemsBloc.add(const UtilisateursRefreshEvent(''));
+                // Navigator.pushReplacementNamed(context, '/utilisateurs');
+              },
             ),
-          );
-        },
-        child: const CircularProgressIndicator(),
-      ),
+          ],
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 25,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          ),
+          centerTitle: true,
+          title: const Text(
+            'list des utilisateurs',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        body: OfflineBuilder(
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
+            final bool connected = connectivity != ConnectivityResult.none;
 
-      // const OurBody(),
-    );
+            if (connected) {
+              return UtilisateursPageBody();
+            }
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/images/caveman.gif',
+                      width: 600,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Veuillez vérifier votre connexion internet',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  ],
+                ),
+              ),
+            );
+          },
+          child: const CircularProgressIndicator(),
+        ));
   }
 }
 
 class UtilisateursPageBody extends StatelessWidget {
-  const UtilisateursPageBody({
+  UtilisateursPageBody({
     Key? key,
   }) : super(key: key);
+
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
-            ..add(const LoadMatchesEvent('')),
-      child: BlocBuilder<MatchesBloc, MatchesState>(
+          UtilisateursBloc(RepositoryProvider.of<UtilisateursServices>(context))
+            ..add(const LoadUtilisateursEvent('  ')),
+      child: BlocBuilder<UtilisateursBloc, UtilisateursState>(
         builder: (context, state) {
-          if (state is MatchesLoadingState) {
+          if (state is UtilisateursInitial) {
             return Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
@@ -100,17 +124,56 @@ class UtilisateursPageBody extends StatelessWidget {
                 ));
           }
 
-          if (state is MatchesLoadedState) {
-            return ListView(children: [
-              ...state.matches.results!.map((result) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
-                  child: UtilisateursCard(result),
-                );
-              }).toList(),
-            ]);
+          if (state is UtilisateursLoadingState) {
+            return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Theme.of(context).primaryColorLight,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ));
           }
-          if (state is MatchesErrorState) {
+
+          if (state is UtilisateursLoadedState) {
+            return SmartRefresher(
+              controller: refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              onRefresh: () {
+                Print.blue('onRefresh');
+                final itemsBloc = BlocProvider.of<UtilisateursBloc>(context)
+                  ..add(const UtilisateursRefreshEvent(
+                    '',
+                  ));
+                itemsBloc.add(const UtilisateursRefreshEvent(''));
+                refreshController.refreshCompleted();
+              },
+              header: const WaterDropMaterialHeader(),
+              child: ListView(children: [
+                // IconButton(
+                //   icon: const Icon(Icons.refresh),
+                //   onPressed: () {
+                //     final itemsBloc = BlocProvider.of<UtilisateursBloc>(context)
+                //       ..add(const UtilisateursRefreshEvent(
+                //         '',
+                //       ));
+                //     itemsBloc.add(const UtilisateursRefreshEvent(''));
+                //     // Navigator.pushReplacementNamed(context, '/utilisateurs');
+                //   },
+                // ),
+                //Text('je suis chargé'),
+                ...state.utilisateurs.results!.map((result) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
+                    // child: Text(result.firstName.toString()),
+                    child: UtilisateursCard(result),
+                  );
+                }).toList(),
+              ]),
+            );
+          }
+          if (state is UtilisateursErrorState) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -194,24 +257,28 @@ class UtilisateursCard extends StatelessWidget {
               const SizedBox(width: 20),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
-                  '${result.userFirstName} ${result.userLastName}',
+                  '${result.firstName} ${result.lastName}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  'Connecté (vpn 2)',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                  ),
-                ),
+                (result.codeVpn != null)
+                    ? Text(
+                        'connecté ${result.codeVpn}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.green,
+                        ),
+                      )
+                    : const Text(
+                        'deconnecté',
+                      ),
                 const SizedBox(height: 5),
                 const Text(
-                  '30 3444 444',
+                  '43278-A-72',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -239,17 +306,29 @@ class UtilisateursCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Column(
-                children: const [
-                  Icon(Icons.location_on),
-                  Text('Position'),
-                ],
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/user_map_page',
+                      arguments: result);
+                },
+                child: Column(
+                  children: const [
+                    Icon(Icons.location_on),
+                    Text('Position'),
+                  ],
+                ),
               ),
-              Column(
-                children: const [
-                  Icon(Icons.live_tv_outlined),
-                  Text('Live Stream'),
-                ],
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/user_live_page',
+                      arguments: result);
+                },
+                child: Column(
+                  children: const [
+                    Icon(Icons.live_tv_outlined),
+                    Text('Live Stream'),
+                  ],
+                ),
               ),
             ],
           ),
@@ -260,7 +339,7 @@ class UtilisateursCard extends StatelessWidget {
     // ignore: dead_code
     return UserAccountsDrawerHeader(
       accountName: Text(
-        '${result.userFirstName} ${result.userLastName}',
+        '${result.firstName} ${result.lastName}',
         style: TextStyle(
           fontSize: 16,
           color: Theme.of(context).primaryColorDark,
@@ -274,7 +353,7 @@ class UtilisateursCard extends StatelessWidget {
         ),
         child: AnimatedTextKit(totalRepeatCount: 1, animatedTexts: [
           TypewriterAnimatedText(
-            'Salut ' + result.userLastName.toString(),
+            'Salut ',
           ),
           TypewriterAnimatedText('carlock est un service de ...'),
         ]),

@@ -9,10 +9,10 @@ class UpdateLocation {
   Future<bool> updateLocation(Localisation newLocalisation) async {
     Localisation? localisation = await saveAndGetAndDelete.getLocalisation();
     if (localisation != null &&
-        double.parse(localisation.latitude).toStringAsFixed(5) ==
-            double.parse(newLocalisation.latitude).toStringAsFixed(5) &&
-        double.parse(localisation.longitude).toStringAsFixed(5) ==
-            double.parse(newLocalisation.longitude).toStringAsFixed(5)) {
+        double.parse(localisation.latitude).toStringAsFixed(4) ==
+            double.parse(newLocalisation.latitude).toStringAsFixed(4) &&
+        double.parse(localisation.longitude).toStringAsFixed(4) ==
+            double.parse(newLocalisation.longitude).toStringAsFixed(4)) {
       Print.red('You are already at this location');
       return false;
     } else {

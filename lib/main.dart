@@ -6,10 +6,14 @@ import 'package:carlock/presentation/map/map.dart';
 import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/presentation/matches/matches.dart';
 import 'package:carlock/presentation/profile/profile_page.dart';
+import 'package:carlock/presentation/utilisateurs/bloc/utilisateurs_bloc.dart';
+import 'package:carlock/presentation/utilisateurs/user_live/user_live_page.dart';
+import 'package:carlock/presentation/utilisateurs/user_map/user_map_page.dart';
 import 'package:carlock/presentation/utilisateurs/utilisateurs.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/authentication.dart';
 import 'package:carlock/services/matches.dart';
+import 'package:carlock/services/utilisateurs.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +40,9 @@ Future<String> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   bool isLoggedIn = true;
+
   await Hive.initFlutter(); //!hive init
   Hive.registerAdapter(TokenModelAdapter()); //!hive register adapter
   // await Firebase.initializeApp();
@@ -76,6 +82,8 @@ Future<FirebaseApp> initializeFirebaseApp() async {
 
 class _MyAppState extends State<MyApp> {
   final MatchesBloc matchesBloc = MatchesBloc(MatchesServices());
+  final UtilisateursBloc utilisateursBloc =
+      UtilisateursBloc(UtilisateursServices());
 
   final Future<FirebaseApp> firebaseInit = initializeFirebaseApp();
 
@@ -97,9 +105,13 @@ class _MyAppState extends State<MyApp> {
                 RepositoryProvider<MatchesServices>(
                   create: (context) => MatchesServices(),
                 ),
+                RepositoryProvider<UtilisateursServices>(
+                  create: (context) => UtilisateursServices(),
+                ),
               ],
               child: MaterialApp(
-                title: 'Flutter Demo',
+                title: 'carlock',
+                debugShowCheckedModeBanner: false,
                 theme: ThemeData(
                   primaryColorLight: Colors.white,
                   primaryColorDark: Colors.black,
@@ -123,6 +135,14 @@ class _MyAppState extends State<MyApp> {
                         child: const MapSample(),
                       ),
                   '/utilisateurs': (context) => const UtilisateursPage(),
+                  '/user_map_page': (context) => BlocProvider.value(
+                        value: utilisateursBloc,
+                        child: UserMapPage(),
+                      ),
+                  '/user_live_page': (context) => BlocProvider.value(
+                        value: utilisateursBloc,
+                        child: const UserLivePage(),
+                      ),
                 },
               ),
             );

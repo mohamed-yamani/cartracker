@@ -29,14 +29,14 @@ class My_Localisation {
         //         locationx.latitude.toString(), locationx.longitude.toString()));
         // localisationChanged = true;
         Print.red('location updated --- --- success');
-        Print.green((location.latitude!).toStringAsFixed(5));
-        Print.green((location.longitude!).toStringAsFixed(5));
+        Print.green((location.latitude!).toStringAsFixed(4));
+        Print.green((location.longitude!).toStringAsFixed(4));
         Print.red('location updated --- --- success');
 
         await userPatchLatLng!.updateCurrentUserInformation(
           LatLng(
-            double.parse((location.latitude!).toStringAsFixed(5)),
-            double.parse((location.longitude!).toStringAsFixed(5)),
+            double.parse((location.latitude!).toStringAsFixed(4)),
+            double.parse((location.longitude!).toStringAsFixed(4)),
           ),
         );
         // updateCarPosition();

@@ -28,3 +28,6 @@ path_provider_macos=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path
 path_provider_windows=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_windows-2.0.5\\
 share=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\share-2.0.4\\
 sqflite=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\sqflite-2.0.2+1\\
+webview_flutter=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\webview_flutter-3.0.2\\
+webview_flutter_android=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\webview_flutter_android-2.8.6\\
+webview_flutter_wkwebview=C:\\src\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\webview_flutter_wkwebview-2.7.3\\

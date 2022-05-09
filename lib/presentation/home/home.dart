@@ -1,6 +1,7 @@
 import 'package:carlock/presentation/home/bloc/bloc/home_bloc.dart';
 import 'package:carlock/services/authentication.dart';
 import 'package:carlock/services/matches.dart';
+import 'package:carlock/services/utilisateurs.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
         create: (context) => HomeBloc(
           RepositoryProvider.of<AuthenticationService>(context),
           RepositoryProvider.of<MatchesServices>(context),
+          RepositoryProvider.of<UtilisateursServices>(context),
         )..add(RegisteringServiceEvent()),
         child: BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {
