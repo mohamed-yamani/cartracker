@@ -1,15 +1,33 @@
 import 'package:carlock/presentation/home/bloc/bloc/home_bloc.dart';
 import 'package:carlock/services/authentication.dart';
 import 'package:carlock/services/matches.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:print_color/print_color.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isKeyboardVisible = false;
+
+  @override
+  void initState() {
+    KeyboardVisibilityController().onChange.listen((visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +58,12 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset(
-                        'assets/images/logo.png',
-                        height: 200,
+                      Expanded(
+                        flex: 2,
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          height: 200,
+                        ),
                       ),
                       const SizedBox(height: 40),
                       TextField(
@@ -76,6 +97,11 @@ class HomePage extends StatelessWidget {
                           // Navigator.pushReplacementNamed(context, '/home');
                         },
                       ),
+                      isKeyboardVisible
+                          ? const SizedBox(height: 0)
+                          : Spacer(
+                              flex: (isKeyboardVisible) ? 0 : 1,
+                            ),
                     ],
                   ),
                 ),

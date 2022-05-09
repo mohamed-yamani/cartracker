@@ -1,4 +1,5 @@
 import 'package:carlock/constants/urls.dart';
+import 'package:carlock/model/localisation.dart';
 import 'package:carlock/model/token.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,4 +35,6 @@ class UserPatchLatLng {
       throw e.toString();
     }
   }
+
+  handleLocationUpdate(Localisation localisation) {}
 }

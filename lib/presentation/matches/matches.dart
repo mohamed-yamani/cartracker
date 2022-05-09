@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carlock/constants/urls.dart';
 import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/presentation/matches/nav_bar.dart';
 import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/services/matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
+import 'package:share/share.dart';
 
 class MatchesPage extends StatelessWidget {
   const MatchesPage({Key? key}) : super(key: key);
@@ -41,62 +44,110 @@ class MatchesPage extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocProvider(
-        create: (context) =>
-            MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
-              ..add(const LoadMatchesEvent('')),
-        child: BlocBuilder<MatchesBloc, MatchesState>(
-          builder: (context, state) {
-            if (state is MatchesLoadingState) {
-              return Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: Theme.of(context).primaryColorLight,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ));
-            }
+      body: OfflineBuilder(
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
+          final bool connected = connectivity != ConnectivityResult.none;
 
-            if (state is MatchesLoadedState) {
-              return ListView(children: [
-                ...state.matches.results!.map((result) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
-                    child: _getCard(result),
-                  );
-                }).toList(),
-              ]);
-            }
-            if (state is MatchesErrorState) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 60,
+          if (connected) {
+            return const OurBody();
+          }
+          return Container(
+            color: Colors.white,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/images/caveman.gif',
+                    width: 600,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Veuillez vérifier votre connexion internet',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(
-                      height: 20,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                ],
+              ),
+            ),
+          );
+        },
+        child: const CircularProgressIndicator(),
+      ),
+
+      // const OurBody(),
+    );
+  }
+}
+
+class OurBody extends StatelessWidget {
+  const OurBody({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
+            ..add(const LoadMatchesEvent('')),
+      child: BlocBuilder<MatchesBloc, MatchesState>(
+        builder: (context, state) {
+          if (state is MatchesLoadingState) {
+            return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Theme.of(context).primaryColorLight,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ));
+          }
+
+          if (state is MatchesLoadedState) {
+            return ListView(children: [
+              ...state.matches.results!.map((result) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
+                  child: _getCard(result),
+                );
+              }).toList(),
+            ]);
+          }
+          if (state is MatchesErrorState) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: Text(
+                      state.error,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 17, color: Colors.red),
                     ),
-                    Center(
-                      child: Text(
-                        state.error,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 17, color: Colors.red),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return Container();
-          },
-        ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
@@ -114,17 +165,37 @@ class _getCard extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
-                    Icon(
-                      Icons.access_time_outlined,
-                      size: 20,
-                      color: Colors.black,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.access_time_outlined,
+                          size: 20,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          result.createdAt.toString().substring(0, 10) +
+                              ' à ' +
+                              result.createdAt.toString().substring(11, 16),
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 14),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      '15 avril 2020, a 16h00',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
+                    const Spacer(),
+                    InkWell(
+                      onTap: () {
+                        Share.share(
+                          '$googleShareLocation${result.latitude},${result.longitude}',
+                        );
+                      },
+                      child: const Icon(
+                        Icons.share,
+                        size: 20,
+                        color: Colors.black,
+                      ),
                     ),
                   ],
                 ),
@@ -165,6 +236,7 @@ class _getCard extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pushNamed(
                           '/map_page',
+                          arguments: result,
                         );
                       },
                       child: const CircleAvatar(

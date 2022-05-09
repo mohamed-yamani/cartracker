@@ -42,7 +42,7 @@ class NavBar extends StatelessWidget {
                       color: Theme.of(context).primaryColorLight)),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/users');
+                Navigator.of(context).pushNamed('/utilisateurs');
               },
             ),
             const Divider(

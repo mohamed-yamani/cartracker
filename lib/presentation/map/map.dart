@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:carlock/constants/urls.dart';
 import 'package:carlock/model/latestLocalisation.dart';
+import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/repository/localisation.dart';
 import 'package:carlock/repository/user_patch.dart';
 import 'package:carlock/services/update_location_only_if_location_changes.dart';
@@ -40,12 +41,12 @@ class MapSampleState extends State<MapSample> {
   bool firstTime = true;
   LatestLocalisation? latestLocalisation;
 
-  @override
-  void initState() {
-    sendNewLocation();
-    updateCarPosition();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  // sendNewLocation();
+  //   updateCarPosition();
+  //   super.initState();
+  // }
 
   void updateCarPosition() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -59,30 +60,30 @@ class MapSampleState extends State<MapSample> {
 
   @override
   void dispose() {
-    _locationSubscription.cancel();
+    // _locationSubscription.cancel();
 
-    _timer.cancel();
+    // _timer.cancel();
     // _locationSubscription.di
     _controller?.dispose();
     super.dispose();
   }
 
-  void _onMapCreated(GoogleMapController controller) {
-    // ! check if _controller is null assign it to controller
-    _controller ??= controller;
-    setState(() {
-      _markers.add(const Marker(
-        markerId: MarkerId(
-          'marker_id_1',
-        ),
-        position: LatLng(32.8821743, -6.897816),
-        infoWindow: InfoWindow(
-          title: 'share location',
-          snippet: 'long press to share location',
-        ),
-      ));
-    });
-  }
+  // void _onMapCreated(GoogleMapController controller) {
+  //   // ! check if _controller is null assign it to controller
+  //   _controller ??= controller;
+  //   setState(() {
+  //     _markers.add(const Marker(
+  //       markerId: MarkerId(
+  //         'marker_id_1',
+  //       ),
+  //       position: LatLng(32.8821743, -6.897816),
+  //       infoWindow: InfoWindow(
+  //         title: 'share location',
+  //         snippet: 'long press to share location',
+  //       ),
+  //     ));
+  //   });
+  // }
 
   static CameraPosition initialCameraPosition = const CameraPosition(
     target: LatLng(32.8821743, -6.897816),
@@ -93,6 +94,13 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    Results result = arguments as Results;
+    LatLng latLng =
+        LatLng(double.parse(result.latitude!), double.parse(result.longitude!));
+    Print.red('latLng: $latLng');
+    Print.green('latLng: $latLng');
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -107,7 +115,7 @@ class MapSampleState extends State<MapSample> {
         title: const Text('carte'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () {
               Share.share(
                   '$googleShareLocation${latestLocalisation?.latitude},${latestLocalisation?.longitude}');
@@ -115,62 +123,82 @@ class MapSampleState extends State<MapSample> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            mapType: (mapCarte) ? MapType.hybrid : MapType.normal,
-            initialCameraPosition: initialCameraPosition,
-            // onMapCreated: _onMapCreated,
-            onMapCreated: (GoogleMapController controller) {
-              _controller = controller;
-              // _onMapCreated(controller);
-            },
-            // onLongPress: (LatLng latLng) {
-            //   //share location
-            //   Share.share(
-            //       '$googleShareLocation${latLng.latitude},${latLng.longitude}');
-            // },
-            // ignore: unnecessary_null_comparison
-            markers: Set.of((marker != null) ? [marker!] : []),
-            // ignore: unnecessary_null_comparison
-            circles: Set.of((circle != null) ? [circle!] : []),
-            onTap: (LatLng latLng) {
-              setState(() {
-                Print.red('Tapped on $latLng');
-                // _markers.add(Marker(
-                //   markerId: MarkerId(
-                //     'marker_id_${_markers.length + 1}',
-                //   ),
-                //   position: latLng,
-                //   infoWindow: InfoWindow(
-                //     title: 'Marker',
-                //     snippet: 'This is my home',
-                //   ),
-                // ));
-              });
-            },
-          ),
-          // const ReturnButton(),
-          Container(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    mapCarte = !mapCarte;
-                  });
-                },
-                child: Icon(
-                  Icons.map,
-                  color: (mapCarte) ? Colors.blue : Colors.grey,
+      body: (double.parse(result.latitude!) == 0.0 &&
+              double.parse(result.longitude!) == 0.0)
+          ? Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
                 ),
-              ),
+                Image.asset(
+                  'assets/images/searchAnimation.gif',
+                  fit: BoxFit.cover,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.white.withOpacity(0.7),
+                    child: const Center(
+                      child: Text('Aucune localisation disponible'),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Stack(
+              children: [
+                GoogleMap(
+                    mapType: mapCarte ? MapType.normal : MapType.satellite,
+                    initialCameraPosition: CameraPosition(
+                      bearing: 0,
+                      target: LatLng(double.parse(result.latitude!),
+                          double.parse(result.longitude!)),
+                      tilt: 59.440717697143555,
+                      zoom: 14.4746,
+                    ),
+                    markers: Set<Marker>.of(_markers),
+                    onMapCreated: (GoogleMapController controller) {
+                      // ! check if _controller is null assign it to controller
+                      // _controller ??= controller;
+                      setState(() {
+                        _markers.add(Marker(
+                          markerId: MarkerId(
+                            result.matriculeStr!,
+                          ),
+                          position: LatLng(double.parse(result.latitude!),
+                              double.parse(result.longitude!)),
+                          infoWindow: InfoWindow(
+                            title: result.matriculeStr!,
+                            // snippet: 'voiture est
+                          ),
+                        ));
+                      });
+                    }),
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          mapCarte = !mapCarte;
+                        });
+                      },
+                      child: Icon(
+                        Icons.map,
+                        color: (mapCarte) ? Colors.black : Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+                // const ButtonTextNewPosition(),
+              ],
             ),
-          )
-          // const ButtonTextNewPosition(),
-        ],
-      ),
       floatingActionButton: Container(
         alignment: Alignment.bottomCenter,
         height: 55,
@@ -309,7 +337,7 @@ class MapSampleState extends State<MapSample> {
             ),
           ),
         );
-        
+
         updateZoom = false;
         updateMarkerAndCircle(
           latestLocalisation,
@@ -321,6 +349,43 @@ class MapSampleState extends State<MapSample> {
         debugPrint('Permission denied');
       }
     }
+  }
+
+  Widget oldMap() {
+    return GoogleMap(
+      mapType: (mapCarte) ? MapType.hybrid : MapType.normal,
+      initialCameraPosition: initialCameraPosition,
+      // onMapCreated: _onMapCreated,
+      onMapCreated: (GoogleMapController controller) {
+        _controller = controller;
+        // _onMapCreated(controller);
+      },
+      // onLongPress: (LatLng latLng) {
+      //   //share location
+      //   Share.share(
+      //       '$googleShareLocation${latLng.latitude},${latLng.longitude}');
+      // },
+      // ignore: unnecessary_null_comparison
+      markers: Set.of((marker != null) ? [marker!] : []),
+      // ignore: unnecessary_null_comparison
+      circles: Set.of((circle != null) ? [circle!] : []),
+      onTap: (LatLng latLng) {
+        setState(() {
+          Print.red('Tapped on $latLng');
+          // _markers.add(Marker(
+          //   markerId: MarkerId(
+          //     'marker_id_${_markers.length + 1}',
+          //   ),
+          //   position: latLng,
+          //   infoWindow: InfoWindow(
+          //     title: 'Marker',
+          //     snippet: 'This is my home',
+          //   ),
+          // ));
+        });
+      },
+    );
+    // const ReturnButton(),
   }
 }
 
@@ -354,7 +419,6 @@ class MapSampleState extends State<MapSample> {
 //     );
 //   }
 // }
-
 
 // class ButtonTextNewPosition extends StatelessWidget {
 //   const ButtonTextNewPosition({

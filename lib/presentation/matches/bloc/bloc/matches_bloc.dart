@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/model/token.dart';
+import 'package:carlock/repository/localisation.dart';
 import 'package:carlock/repository/matches_repository.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/matches.dart';
@@ -11,6 +12,7 @@ part 'matches_state.dart';
 class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
   final MatchesServices _todoService;
   final repo = MatchesRepository();
+  My_Localisation myLocalisation = My_Localisation();
 
   MatchesBloc(this._todoService) : super(MatchesInitial()) {
     on<LoadMatchesEvent>((event, emit) async {
@@ -18,6 +20,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       try {
         MatchesModel matches = await _todoService.getAll(event.username);
         TokenModel? user = await getToken();
+        myLocalisation.updateLocation();
         emit(MatchesLoadedState(matches, user));
       } catch (e) {
         emit(MatchesErrorState(e.toString()));
