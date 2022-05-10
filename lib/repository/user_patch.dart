@@ -15,7 +15,7 @@ class UserPatchLatLng {
     String token;
 
     //update localisation if localisation is changed and active
-    Print.yellow('User information updated');
+    Print.yellow('User information updated1');
     TokenModel? tokenModel = await getToken();
     try {
       data = await http.patch(
