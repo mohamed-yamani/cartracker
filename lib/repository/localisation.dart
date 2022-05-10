@@ -52,9 +52,9 @@ class My_Localisation {
 
 class ApiLocalisation {
   late final data;
-  Future<LatestLocalisation> getlatestlocalisation() async {
+  Future<LatestLocalisation> getlatestlocalisation(String? id) async {
     TokenModel? tokenModel = await getToken();
-    const String url = "$myUrl/api/user/3/localisation/";
+    String url = "$myUrl/api/user/$id/localisation/";
     try {
       data = await http.get(
         Uri.parse(url),

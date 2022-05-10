@@ -5,6 +5,7 @@ import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/repository/utilisateurs_repository.dart';
 import 'package:carlock/services/utilisateurs.dart';
 import 'package:equatable/equatable.dart';
+import 'package:print_color/print_color.dart';
 
 part 'utilisateurs_event.dart';
 part 'utilisateurs_state.dart';
@@ -26,7 +27,7 @@ class UtilisateursBloc extends Bloc<UtilisateursEvent, UtilisateursState> {
       }
     });
     on<UtilisateursRefreshEvent>((event, emit) async {
-      emit(UtilisateursLoadingState());
+      // emit(UtilisateursLoadingState());
       try {
         UtilisateursModel utilisateurs =
             await utilisatorService.getAll(event.username);

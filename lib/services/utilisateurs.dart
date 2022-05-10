@@ -1,9 +1,5 @@
-import 'package:carlock/model/match.dart';
-import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/model/utilisateurs_model.dart';
-import 'package:carlock/repository/matches_repository.dart';
 import 'package:carlock/repository/utilisateurs_repository.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:print_color/print_color.dart';
 
 class UtilisateursServices {

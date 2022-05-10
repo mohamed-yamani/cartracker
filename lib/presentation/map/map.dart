@@ -317,7 +317,8 @@ class MapSampleState extends State<MapSample> {
     try {
       // Uint8List markerImageData = await getMarker();
 
-      latestLocalisation = await ApiLocalisation().getlatestlocalisation();
+      latestLocalisation =
+          await ApiLocalisation().getlatestlocalisation('1337');
 
       updateMarkerAndCircle(
         latestLocalisation,

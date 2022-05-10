@@ -24,20 +24,6 @@ class _UtilisateursPageState extends State<UtilisateursPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          actions: [
-            //button pour actualiser la liste
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                final itemsBloc = BlocProvider.of<UtilisateursBloc>(context)
-                  ..add(const UtilisateursRefreshEvent(
-                    '',
-                  ));
-                itemsBloc.add(const UtilisateursRefreshEvent(''));
-                // Navigator.pushReplacementNamed(context, '/utilisateurs');
-              },
-            ),
-          ],
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios,
