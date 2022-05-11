@@ -1,4 +1,4 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_visible_for_testing_member, unused_field
 
 import 'package:bloc/bloc.dart';
 import 'package:carlock/repository/patch_reg_id_to_webserver.dart';

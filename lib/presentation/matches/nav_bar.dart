@@ -4,7 +4,6 @@ import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/matches.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NavBar extends StatelessWidget {
@@ -136,19 +135,11 @@ class NavBar extends StatelessWidget {
       ),
       arrowColor: Colors.black,
       accountEmail: const Text('_'),
-      currentAccountPicture: CircleAvatar(
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl:
-                'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bbb48a178c56f1269c038cdf6.jpg',
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.cover,
-            height: 90,
-            width: 90,
-          ),
-        ),
+      currentAccountPicture: const CircleAvatar(
+        backgroundColor: Colors.grey,
+        backgroundImage: AssetImage('assets/images/no_image.png'),
+        key: ValueKey('no_image.png'),
+        radius: 25,
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
@@ -178,20 +169,26 @@ class NavBar extends StatelessWidget {
         ]),
       ),
       currentAccountPicture: CircleAvatar(
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl:
-                'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bbb48a178c56f1269c038cdf6.jpg',
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.cover,
-            height: 90,
-            width: 90,
-            key: const ValueKey('f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-            cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
-          ),
-        ),
+        child: 1 == 3
+            ? ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: state.user.user!,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: BoxFit.cover,
+                  height: 90,
+                  width: 90,
+                  key: const ValueKey('user_image'),
+                  cacheKey: 'user_image',
+                ),
+              )
+            : const CircleAvatar(
+                backgroundColor: Colors.grey,
+                backgroundImage: AssetImage('assets/images/no_image.png'),
+                key: ValueKey('no_image.png'),
+                radius: 42,
+              ),
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,

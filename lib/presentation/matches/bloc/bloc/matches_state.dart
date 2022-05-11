@@ -39,3 +39,18 @@ class MatchesErrorState extends MatchesState {
         error,
       ];
 }
+
+class MatchesRefreshState extends MatchesState {
+  final MatchesModel matches;
+  final TokenModel? user;
+
+  const MatchesRefreshState(
+    this.matches,
+    this.user,
+  );
+
+  @override
+  List<Object?> get props => [
+        matches,
+      ];
+}

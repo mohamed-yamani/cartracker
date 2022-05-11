@@ -22,8 +22,21 @@ class MatchesServices {
     Future<MatchesModel> matches = MatchesRepository().getMathesFromWe();
     Print.yellow('wow $date $matches');
 
-    // return matches;
-    throw Exception('wow');
+    Print.yellow('wow $date date');
+    try {
+      return matches;
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<MatchesModel> getByRegisterNumber(
+      final String username, final String registerNumber) {
+    Future<MatchesModel> matches =
+        MatchesRepository().searchByRegisterNumber(username, registerNumber);
+    Print.yellow('wow $registerNumber $matches');
+
+    Print.yellow('wow $registerNumber registerNumber');
     try {
       return matches;
     } on Exception catch (e) {

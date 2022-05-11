@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:carlock/constants/urls.dart';
-import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/model/token.dart';
 import 'package:carlock/model/utilisateurs_model.dart';
 import 'package:carlock/repository/save_get_token.dart';
@@ -17,10 +16,11 @@ class UtilisateursRepository {
       if (response.statusCode == 200) {
         return UtilisateursModel.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to login');
+        throw Exception(response.body);
       }
     } catch (e) {
-      throw 'please check your internet connection';
+      // throw 'something went wrong';
+      throw e.toString();
     }
   }
 }

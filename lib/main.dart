@@ -10,8 +10,10 @@ import 'package:carlock/presentation/utilisateurs/bloc/utilisateurs_bloc.dart';
 import 'package:carlock/presentation/utilisateurs/user_live/user_live_page.dart';
 import 'package:carlock/presentation/utilisateurs/user_map/user_map_page.dart';
 import 'package:carlock/presentation/utilisateurs/utilisateurs.dart';
+import 'package:carlock/repository/localisation.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/authentication.dart';
+import 'package:carlock/services/initialize_background_jobs.dart';
 import 'package:carlock/services/matches.dart';
 import 'package:carlock/services/utilisateurs.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,8 +41,11 @@ Future<String> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
+  // bool hasPermissions = await FlutterBackground.hasPermissions;
+  BackgroundJobs().initializeBackgroundJobs();
+  // flutter splash
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   bool isLoggedIn = true;
 
   await Hive.initFlutter(); //!hive init
@@ -85,7 +90,14 @@ class _MyAppState extends State<MyApp> {
   final UtilisateursBloc utilisateursBloc =
       UtilisateursBloc(UtilisateursServices());
 
+  My_Localisation myLocalisation = My_Localisation();
   final Future<FirebaseApp> firebaseInit = initializeFirebaseApp();
+
+  @override
+  void initState() {
+    myLocalisation.updateLocation();
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override
@@ -115,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                 theme: ThemeData(
                   primaryColorLight: Colors.white,
                   primaryColorDark: Colors.black,
-                  primarySwatch: Colors.deepOrange,
+                  primarySwatch: Colors.blueGrey,
                   fontFamily: 'Inconsolata',
                 ),
                 routes: {
@@ -155,7 +167,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     matchesBloc.close();
     super.dispose();
   }

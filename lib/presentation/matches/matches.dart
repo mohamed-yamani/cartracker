@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:print_color/print_color.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share/share.dart';
 
 class MatchesPage extends StatefulWidget {
@@ -71,101 +72,143 @@ class _MatchesPageState extends State<MatchesPage> {
             child: custombar,
           ),
           actions: [
-            IconButton(
-              icon: customIcon,
-              onPressed: () {
-                Print.red('Recherche par date');
+            BlocBuilder<MatchesBloc, MatchesState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: customIcon,
+                  onPressed: () {
+                    // matchesBloc
+                    //     .add(const MatchesSearchDateEvent('jean', 'jojo'));
 
-                setState(() {
-                  if (customIcon.icon == Icons.date_range) {
-                    customIcon = const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 25,
-                    );
-                    custombar = TextField(
-                      cursorColor: Colors.white,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Recherche par date',
-                        hintStyle: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    );
-                  } else {
-                    customIcon = const Icon(
-                      Icons.date_range,
-                      color: Colors.white,
-                      size: 25,
-                    );
-                    custombar = const Text(
-                      'HISTORIQUE DES MATCHES',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  }
-                });
-                // showSearch(context: context, delegate: SearchDelegate());
+                    setState(() {
+                      if (customIcon.icon == Icons.date_range) {
+                        customIcon = const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 25,
+                        );
+                        custombar = TextField(
+                          textInputAction: TextInputAction.search,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {
+                            Print.red('Recherche par date');
+
+                            BlocProvider.of<MatchesBloc>(context)
+                                .add(MatchesSearchDateEvent(
+                              '',
+                              value,
+                            ));
+                          },
+                          cursorColor: Colors.white,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Recherche par date',
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        );
+                      } else {
+                        BlocProvider.of<MatchesBloc>(context)
+                            .add(const MatchesSearchDateEvent(
+                          '',
+                          '',
+                        ));
+                        customIcon = const Icon(
+                          Icons.date_range,
+                          color: Colors.white,
+                          size: 25,
+                        );
+                        custombar = const Text(
+                          'HISTORIQUE DES MATCHES',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    });
+                    // showSearch(context: context, delegate: SearchDelegate());
+                  },
+                  tooltip: 'Recherche par date',
+                );
               },
-              tooltip: 'Recherche par date',
             ),
-            IconButton(
-              icon: customIcon2,
-              onPressed: () {
-                Print.red('recherche par matricule');
-                setState(() {
-                  if (customIcon2.icon == Icons.directions_car_outlined) {
-                    customIcon2 = const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 25,
-                    );
-                    custombar = TextField(
-                      cursorColor: Colors.white,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Recherche par matricule',
-                        hintStyle: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    );
-                  } else {
-                    customIcon2 = const Icon(
-                      Icons.directions_car_outlined,
-                      color: Colors.white,
-                      size: 25,
-                    );
-                    custombar = const Text(
-                      'HISTORIQUE DES MATCHES',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  }
-                });
+            BlocBuilder<MatchesBloc, MatchesState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: customIcon2,
+                  onPressed: () {
+                    // matchesBloc
+                    //     .add(const MatchesSearchDateEvent('jean', 'jojo'));
+                    setState(() {
+                      if (customIcon2.icon == Icons.directions_car_outlined) {
+                        customIcon2 = const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 25,
+                        );
+                        custombar = TextField(
+                          textInputAction: TextInputAction.search,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {
+                            Print.red('recherche par matricule');
+
+                            BlocProvider.of<MatchesBloc>(context)
+                                .add(MatchesSearchRegisterNumberEvent(
+                              '',
+                              value,
+                            ));
+                          },
+                          cursorColor: Colors.white,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Recherche par matricule',
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        );
+                      } else {
+                        BlocProvider.of<MatchesBloc>(context)
+                            .add(const MatchesSearchRegisterNumberEvent(
+                          '',
+                          '',
+                        ));
+                        customIcon2 = const Icon(
+                          Icons.directions_car_outlined,
+                          color: Colors.white,
+                          size: 25,
+                        );
+                        custombar = const Text(
+                          'HISTORIQUE DES MATCHES',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    });
+                  },
+                  tooltip: 'recherche par matricule',
+                );
               },
-              tooltip: 'recherche par matricule',
             ),
           ],
           // bottom: const PreferredSize(
@@ -180,7 +223,7 @@ class _MatchesPageState extends State<MatchesPage> {
             final bool connected = connectivity != ConnectivityResult.none;
 
             if (connected) {
-              return const OurBody();
+              return OurBody();
             }
             return Container(
               color: Colors.white,
@@ -215,10 +258,14 @@ class _MatchesPageState extends State<MatchesPage> {
   }
 }
 
+// ignore: must_be_immutable
 class OurBody extends StatelessWidget {
-  const OurBody({
+  OurBody({
     Key? key,
   }) : super(key: key);
+
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
@@ -235,15 +282,60 @@ class OurBody extends StatelessWidget {
         }
 
         if (state is MatchesLoadedState) {
-          return ListView(children: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-            ...state.matches.results!.map((result) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
-                child: _getCard(result),
-              );
-            }).toList(),
-          ]);
+          return SmartRefresher(
+            controller: refreshController,
+            enablePullDown: true,
+            enablePullUp: false,
+            onRefresh: () {
+              Print.blue('onRefresh');
+              final matchesBloc = BlocProvider.of<MatchesBloc>(context)
+                ..add(const MatchesRefreshEvent(
+                  '',
+                ));
+              matchesBloc.add(const MatchesRefreshEvent(''));
+              refreshController.refreshCompleted();
+            },
+            header: const WaterDropMaterialHeader(),
+            child: ListView(children: [
+/*
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        final matchesBloc =
+                            BlocProvider.of<MatchesBloc>(context)
+                              ..add(const MatchesSearchDateEvent(
+                                '',
+                                '',
+                              ));
+                        matchesBloc
+                            .add(const MatchesSearchDateEvent('jean', 'jojo'));
+                      },
+                      icon: const Icon(Icons.date_range)),
+                  const SizedBox(height: 20),
+                  IconButton(
+                      onPressed: () {
+                        final matchesBloc =
+                            BlocProvider.of<MatchesBloc>(context)
+                              ..add(const MatchesSearchRegisterNumberEvent(
+                                '',
+                                '',
+                              ));
+                        matchesBloc.add(const MatchesSearchRegisterNumberEvent(
+                            'jean', 'jojo'));
+                      },
+                      icon: const Icon(Icons.directions_car_outlined)),
+                ],
+              ),
+              */
+              ...state.matches.results!.map((result) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 2),
+                  child: _getCard(result),
+                );
+              }).toList(),
+            ]),
+          );
         }
         if (state is MatchesErrorState) {
           return Padding(
@@ -340,15 +432,23 @@ class _getCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
-                      children: const [
-                        CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage: CachedNetworkImageProvider(
-                              'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bbb48a178c56f1269c038cdf6.jpg',
-                              cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-                          key: ValueKey('f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-                          radius: 25,
-                        ),
+                      children: [
+                        result.picture != null && 1 > 2
+                            ? CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    result.picture!,
+                                    cacheKey: result.id.toString() + 'picture'),
+                                key: ValueKey(result.id.toString() + 'picture'),
+                                radius: 25,
+                              )
+                            : const CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                backgroundImage:
+                                    AssetImage('assets/images/no_image.png'),
+                                key: ValueKey('no_image.png'),
+                                radius: 25,
+                              ),
                       ],
                     ),
                     Text(

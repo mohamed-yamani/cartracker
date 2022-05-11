@@ -124,7 +124,7 @@ class UtilisateursPageBody extends StatelessWidget {
             return SmartRefresher(
               controller: refreshController,
               enablePullDown: true,
-              enablePullUp: true,
+              enablePullUp: false,
               onRefresh: () {
                 Print.blue('onRefresh');
                 final itemsBloc = BlocProvider.of<UtilisateursBloc>(context)
@@ -210,25 +210,33 @@ class UtilisateursCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 45,
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bbb48a178c56f1269c038cdf6.jpg',
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                        height: 120,
-                        width: 120,
-                        key: const ValueKey(
-                            'f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-                        cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
-                      ),
-                    ),
-                  ),
+                  1 == 2
+                      ? CircleAvatar(
+                          radius: 45,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bc56f1269c038cdf6.jpg',
+                              placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit.cover,
+                              height: 120,
+                              width: 120,
+                              key: const ValueKey(
+                                  'f00cf06bbb48a178c56f1269c038cdf6.jpg'),
+                              cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
+                            ),
+                          ),
+                        )
+                      : const CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage:
+                              AssetImage('assets/images/no_image.png'),
+                          key: ValueKey('no_image.png'),
+                          radius: 42,
+                        ),
                   Positioned(
                       right: 0,
                       top: 0,
@@ -322,6 +330,14 @@ class UtilisateursCard extends StatelessWidget {
       ),
     );
 
+// const CircleAvatar(
+//                                 backgroundColor: Colors.grey,
+//                                 backgroundImage:
+//                                     AssetImage('assets/images/no_image.png'),
+//                                 key: ValueKey('no_image.png'),
+//                                 radius: 25,
+//                               ),
+
     // ignore: dead_code
     return UserAccountsDrawerHeader(
       accountName: Text(
@@ -344,22 +360,28 @@ class UtilisateursCard extends StatelessWidget {
           TypewriterAnimatedText('carlock est un service de ...'),
         ]),
       ),
-      currentAccountPicture: CircleAvatar(
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl:
-                'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bbb48a178c56f1269c038cdf6.jpg',
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.cover,
-            height: 90,
-            width: 90,
-            key: const ValueKey('f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-            cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
-          ),
-        ),
-      ),
+      currentAccountPicture: result.picture != null
+          ? CircleAvatar(
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: result.picture ?? '',
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: BoxFit.cover,
+                  height: 90,
+                  width: 90,
+                  key: const ValueKey('f00cf06bbb48a178c56f1269c038cdf6.jpg'),
+                  cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
+                ),
+              ),
+            )
+          : const CircleAvatar(
+              backgroundColor: Colors.grey,
+              backgroundImage: AssetImage('assets/images/no_image.png'),
+              key: ValueKey('no_image.png'),
+              radius: 25,
+            ),
       decoration: BoxDecoration(
         color: Colors.grey[200],
         // image: const DecorationImage(

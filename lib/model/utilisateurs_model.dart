@@ -41,10 +41,10 @@ class Results {
   String? longitude;
   String? latitude;
   bool? ipUp;
-  Null? lastIpUp;
-  Null? lastDetectionM;
-  Null? timestampLastDetectionM;
-  Null? picture;
+  String? lastIpUp;
+  String? lastDetectionM;
+  String? timestampLastDetectionM;
+  String? picture;
   String? streamingUrl;
   String? codeVpn;
 

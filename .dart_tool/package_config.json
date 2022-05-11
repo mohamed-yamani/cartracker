@@ -284,6 +284,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_background",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_background-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_bloc",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bloc-8.0.1",
       "packageUri": "lib/",
@@ -896,7 +902,7 @@
       "languageVersion": "2.16"
     }
   ],
-  "generated": "2022-05-09T20:43:57.466692Z",
+  "generated": "2022-05-11T15:49:53.881951Z",
   "generator": "pub",
   "generatorVersion": "2.16.0"
 }

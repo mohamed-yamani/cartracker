@@ -22,4 +22,46 @@ class MatchesRepository {
       throw 'please check your internet connection';
     }
   }
+
+  Future<MatchesModel> searchByRegisterNumber(
+      final String username, final String registerNumber) async {
+    try {
+      TokenModel? tokenModel = await getToken();
+      final response = await http.get(
+          Uri.parse(
+              'https://platereader.icebergtech.net/api/match/?search=$registerNumber'),
+          headers: {
+            'Accept': 'application/json',
+            "authorization": "Bearer ${tokenModel?.token}",
+          });
+      if (response.statusCode == 200) {
+        return MatchesModel.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to login');
+      }
+    } catch (e) {
+      throw 'please check your internet connection';
+    }
+  }
+
+  Future<MatchesModel> searchByDate(
+      final String username, final String date) async {
+    try {
+      TokenModel? tokenModel = await getToken();
+      final response = await http.get(
+          Uri.parse(
+              'https://platereader.icebergtech.net/api/match/?user=$date'),
+          headers: {
+            'Accept': 'application/json',
+            "authorization": "Bearer ${tokenModel?.token}",
+          });
+      if (response.statusCode == 200) {
+        return MatchesModel.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to login');
+      }
+    } catch (e) {
+      throw 'please check your internet connection';
+    }
+  }
 }

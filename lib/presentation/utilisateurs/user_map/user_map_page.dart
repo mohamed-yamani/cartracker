@@ -30,6 +30,14 @@ class _UserMapPageState extends State<UserMapPage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer.cancel();
+    _googleMapController?.dispose();
+    super.dispose();
+  }
+
   void updateCarPosition() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
@@ -99,9 +107,9 @@ class _UserMapPageState extends State<UserMapPage> {
       Results result = ModalRoute.of(context)?.settings.arguments as Results;
       latestLocalisation =
           await ApiLocalisation().getlatestlocalisation(result.id?.toString());
-      Print.red(result);
-      Print.red(
-          'latutude: ${latestLocalisation?.latitude}  longitude: ${latestLocalisation?.longitude}');
+      // Print.red(result);
+      // Print.red(
+      //     'latutude: ${latestLocalisation?.latitude}  longitude: ${latestLocalisation?.longitude}');
       updateMarkerAndCircle(
         latestLocalisation,
         // markerImageData,
@@ -142,11 +150,13 @@ class _UserMapPageState extends State<UserMapPage> {
         double.parse(latestLocalisation.longitude!));
 
     // ignore: unnecessary_this
-    this.setState(
-      () {
-        SetMarker(latLng);
-      },
-    );
+    if (mounted) {
+      setState(
+        () {
+          SetMarker(latLng);
+        },
+      );
+    }
   }
 
   void SetMarker(LatLng latLng) {

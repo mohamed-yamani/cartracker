@@ -11,3 +11,30 @@ class LoadMatchesEvent extends MatchesEvent {
   @override
   List<Object?> get props => [];
 }
+
+class MatchesRefreshEvent extends MatchesEvent {
+  final String username;
+
+  const MatchesRefreshEvent(this.username);
+  @override
+  List<Object?> get props => [];
+}
+
+class MatchesSearchDateEvent extends MatchesEvent {
+  final String username;
+  final String searchDate;
+
+  const MatchesSearchDateEvent(this.username, this.searchDate);
+  @override
+  List<Object?> get props => [];
+}
+
+class MatchesSearchRegisterNumberEvent extends MatchesEvent {
+  final String username;
+  final String searchRegisterNumber;
+
+  const MatchesSearchRegisterNumberEvent(
+      this.username, this.searchRegisterNumber);
+  @override
+  List<Object?> get props => [];
+}
