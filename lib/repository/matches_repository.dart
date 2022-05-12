@@ -27,13 +27,11 @@ class MatchesRepository {
       final String username, final String registerNumber) async {
     try {
       TokenModel? tokenModel = await getToken();
-      final response = await http.get(
-          Uri.parse(
-              'https://platereader.icebergtech.net/api/match/?search=$registerNumber'),
-          headers: {
-            'Accept': 'application/json',
-            "authorization": "Bearer ${tokenModel?.token}",
-          });
+      final response = await http
+          .get(Uri.parse('$myUrl/api/match/?search=$registerNumber'), headers: {
+        'Accept': 'application/json',
+        "authorization": "Bearer ${tokenModel?.token}",
+      });
       if (response.statusCode == 200) {
         return MatchesModel.fromJson(jsonDecode(response.body));
       } else {
@@ -48,13 +46,11 @@ class MatchesRepository {
       final String username, final String date) async {
     try {
       TokenModel? tokenModel = await getToken();
-      final response = await http.get(
-          Uri.parse(
-              'https://platereader.icebergtech.net/api/match/?user=$date'),
-          headers: {
-            'Accept': 'application/json',
-            "authorization": "Bearer ${tokenModel?.token}",
-          });
+      final response =
+          await http.get(Uri.parse('$myUrl/api/match/?user=$date'), headers: {
+        'Accept': 'application/json',
+        "authorization": "Bearer ${tokenModel?.token}",
+      });
       if (response.statusCode == 200) {
         return MatchesModel.fromJson(jsonDecode(response.body));
       } else {

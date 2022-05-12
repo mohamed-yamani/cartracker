@@ -4,9 +4,13 @@
     <item android:drawable="?android:colorBackground" />
 
     <!-- You can insert your own image assets here -->
-    <!-- <item>
+     <item>
         <bitmap
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
             android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher" />
+    </item>
 </layer-list>

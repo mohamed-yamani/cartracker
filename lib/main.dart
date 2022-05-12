@@ -5,6 +5,7 @@ import 'package:carlock/presentation/home/home.dart';
 import 'package:carlock/presentation/map/map.dart';
 import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/presentation/matches/matches.dart';
+import 'package:carlock/presentation/profile/bloc/profile_bloc.dart';
 import 'package:carlock/presentation/profile/profile_page.dart';
 import 'package:carlock/presentation/utilisateurs/bloc/utilisateurs_bloc.dart';
 import 'package:carlock/presentation/utilisateurs/user_live/user_live_page.dart';
@@ -15,6 +16,7 @@ import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/authentication.dart';
 import 'package:carlock/services/initialize_background_jobs.dart';
 import 'package:carlock/services/matches.dart';
+import 'package:carlock/services/user_me_services.dart';
 import 'package:carlock/services/utilisateurs.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -90,6 +92,7 @@ class _MyAppState extends State<MyApp> {
   final UtilisateursBloc utilisateursBloc =
       UtilisateursBloc(UtilisateursServices());
 
+  final ProfileBloc profileBloc = ProfileBloc(UserMeServices());
   My_Localisation myLocalisation = My_Localisation();
   final Future<FirebaseApp> firebaseInit = initializeFirebaseApp();
 
@@ -120,6 +123,10 @@ class _MyAppState extends State<MyApp> {
                 RepositoryProvider<UtilisateursServices>(
                   create: (context) => UtilisateursServices(),
                 ),
+                RepositoryProvider<UserMeServices>(
+                  create: (context) => UserMeServices(),
+                ),
+                
               ],
               child: MaterialApp(
                 title: 'carlock',
@@ -135,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                       ? HomePage()
                       : const MatchesPage(),
                   '/home': (context) => HomePage(),
-                  '/profile': (context) => const ProfilePage(),
+                  '/profile': (context) => ProfilePage(),
                   '/about': (context) => const AboutPage(),
                   '/contact': (context) => const ContactPage(),
                   '/matches': (context) => BlocProvider.value(
@@ -149,7 +156,7 @@ class _MyAppState extends State<MyApp> {
                   '/utilisateurs': (context) => const UtilisateursPage(),
                   '/user_map_page': (context) => BlocProvider.value(
                         value: utilisateursBloc,
-                        child: UserMapPage(),
+                        child: const UserMapPage(),
                       ),
                   '/user_live_page': (context) => BlocProvider.value(
                         value: utilisateursBloc,

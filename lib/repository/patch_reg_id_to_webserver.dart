@@ -14,7 +14,8 @@ class RegIdToWebserver {
     TokenModel? tokenModel = await getToken();
     try {
       data = await http.patch(
-        Uri.parse('https://platereader.icebergtech.net/api/user/me/'),
+        // Uri.parse('https://matricule.icebergtech.net/api/user/me/'),
+        Uri.parse('$myUrl/api/user/me/'),
         body: {
           "reg_id": regId,
         },

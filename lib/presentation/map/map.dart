@@ -14,8 +14,8 @@ import 'package:print_color/print_color.dart';
 
 import 'package:share/share.dart';
 
-// https://platereader.icebergtech.net/api/match/?search=655
-// https://platereader.icebergtech.net/api/match/?user=3
+// https://matricule.icebergtech.net/api/match/?search=655
+// https://matricule.icebergtech.net/api/match/?user=3
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);

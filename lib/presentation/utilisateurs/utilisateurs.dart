@@ -6,6 +6,7 @@ import 'package:carlock/services/utilisateurs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:intl/intl.dart';
 import 'package:print_color/print_color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -208,46 +209,7 @@ class UtilisateursCard extends StatelessWidget {
         child: Column(children: [
           Row(
             children: [
-              Stack(
-                children: [
-                  1 == 2
-                      ? CircleAvatar(
-                          radius: 45,
-                          child: ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://i.pinimg.com/originals/f0/0c/f0/f00cf06bc56f1269c038cdf6.jpg',
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              fit: BoxFit.cover,
-                              height: 120,
-                              width: 120,
-                              key: const ValueKey(
-                                  'f00cf06bbb48a178c56f1269c038cdf6.jpg'),
-                              cacheKey: 'f00cf06bbb48a178c56f1269c038cdf6.jpg',
-                            ),
-                          ),
-                        )
-                      : const CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage:
-                              AssetImage('assets/images/no_image.png'),
-                          key: ValueKey('no_image.png'),
-                          radius: 42,
-                        ),
-                  Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                          padding: const EdgeInsets.all(7.5),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.white),
-                              borderRadius: BorderRadius.circular(90.0),
-                              color: Colors.green)))
-                ],
-              ),
+              UserCircleAvatar(result: result),
               const SizedBox(width: 20),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
@@ -258,7 +220,7 @@ class UtilisateursCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                (result.codeVpn != null)
+                (result.ipUp!)
                     ? Text(
                         'connecté ${result.codeVpn}',
                         style: const TextStyle(
@@ -269,6 +231,11 @@ class UtilisateursCard extends StatelessWidget {
                       )
                     : const Text(
                         'deconnecté',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
                       ),
                 const SizedBox(height: 5),
                 const Text(
@@ -279,13 +246,6 @@ class UtilisateursCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  '09 mai 2022, à 10:00',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
               ])
             ],
           ),
@@ -297,35 +257,17 @@ class UtilisateursCard extends StatelessWidget {
             endIndent: 10,
           ),
           const SizedBox(height: 3),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/user_map_page',
-                      arguments: result);
-                },
-                child: Column(
-                  children: const [
-                    Icon(Icons.location_on),
-                    Text('Position'),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/user_live_page',
-                      arguments: result);
-                },
-                child: Column(
-                  children: const [
-                    Icon(Icons.live_tv_outlined),
-                    Text('Live Stream'),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          result.ipUp!
+              ? PositionAndLiveStream(result: result)
+              : Text(
+                  result.lastIpUp != null
+                      ? 'Dernière connexion ${DateFormat('dd MMMM yyyy, à HH:mm').format(DateTime.parse(result.lastIpUp!))}'
+                      : 'Utilisateur jamais connecté',
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                )
         ]),
       ),
     );
@@ -389,6 +331,80 @@ class UtilisateursCard extends StatelessWidget {
         //   fit: BoxFit.cover,
         // ),
       ),
+    );
+  }
+}
+
+class PositionAndLiveStream extends StatelessWidget {
+  const PositionAndLiveStream({
+    Key? key,
+    required this.result,
+  }) : super(key: key);
+
+  final Results result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, '/user_map_page', arguments: result);
+          },
+          child: Column(
+            children: const [
+              Icon(Icons.location_on),
+              Text('Position'),
+            ],
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, '/user_live_page', arguments: result);
+          },
+          child: Column(
+            children: const [
+              Icon(Icons.live_tv_outlined),
+              Text('Live Stream'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class UserCircleAvatar extends StatelessWidget {
+  const UserCircleAvatar({
+    Key? key,
+    required this.result,
+  }) : super(key: key);
+
+  final Results result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        const CircleAvatar(
+          backgroundColor: Colors.grey,
+          backgroundImage: AssetImage('assets/images/no_image.png'),
+          key: ValueKey('no_image.png'),
+          radius: 35,
+        ),
+        Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+                padding: const EdgeInsets.all(7.5),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        width: 2,
+                        color: result.ipUp! ? Colors.white : Colors.white),
+                    borderRadius: BorderRadius.circular(100.0),
+                    color: result.ipUp! ? Colors.green : Colors.red)))
+      ],
     );
   }
 }
