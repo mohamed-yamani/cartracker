@@ -22,9 +22,9 @@ class MatchesRefreshEvent extends MatchesEvent {
 
 class MatchesSearchDateEvent extends MatchesEvent {
   final String username;
-  final String searchDate;
+  String searchDate;
 
-  const MatchesSearchDateEvent(this.username, this.searchDate);
+  MatchesSearchDateEvent(this.username, this.searchDate);
   @override
   List<Object?> get props => [];
 }

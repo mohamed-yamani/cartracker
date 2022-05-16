@@ -12,20 +12,16 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UserMeServices userMeServices;
 
-  ProfileBloc(this.userMeServices) : super(ProfileInitial());
-
-  Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
-    Print.red('LoadUserMeEvent here');
-    if (event is LoadUserMeEvent) {
-      Print.red('LoadUserMeEvent here');
-      yield ProfileLoadingState();
+  ProfileBloc(this.userMeServices) : super(ProfileInitial()) {
+    on<LoadUserMeEvent>((event, emit) async {
+      emit(ProfileLoadingState());
       try {
         UserMeModel userMe = await userMeServices.getUserMe(event.username);
-        TokenModel? token = await getToken();
-        yield ProfileLoadedState(userMe, token);
+        TokenModel? user = await getToken();
+        emit(ProfileLoadedState(userMe, user));
       } catch (e) {
-        yield ProfileErrorState(e.toString());
+        emit(ProfileErrorState(e.toString()));
       }
-    }
+    });
   }
 }

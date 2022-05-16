@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:carlock/model/token.dart';
 import 'package:carlock/model/utilisateurs_model.dart';
+import 'package:carlock/repository/api_permission_repo.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/repository/utilisateurs_repository.dart';
 import 'package:carlock/services/utilisateurs.dart';
@@ -18,6 +19,13 @@ class UtilisateursBloc extends Bloc<UtilisateursEvent, UtilisateursState> {
     on<LoadUtilisateursEvent>((event, emit) async {
       emit(UtilisateursLoadingState());
       try {
+       
+      List<dynamic> permissionList = await PermisionRepository().getPermissionRepo();
+      Print.green(permissionList.toString());
+  
+    
+
+
         UtilisateursModel utilisateurs =
             await utilisatorService.getAll(event.username);
         TokenModel? user = await getToken();

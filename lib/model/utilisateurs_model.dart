@@ -2,8 +2,8 @@ import 'package:carlock/model/user.dart';
 
 class UtilisateursModel {
   int? count;
-  Null? next;
-  Null? previous;
+  String? next;
+  String? previous;
   List<Results>? results;
 
   UtilisateursModel({this.count, this.next, this.previous, this.results});

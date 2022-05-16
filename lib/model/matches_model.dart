@@ -1,7 +1,7 @@
 class MatchesModel {
   int? count;
-  Null? next;
-  Null? previous;
+  String? next;
+  String? previous;
   List<Results>? results;
 
   MatchesModel({this.count, this.next, this.previous, this.results});

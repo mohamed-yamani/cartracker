@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carlock/model/matches_model.dart';
 import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/matches.dart';
@@ -16,111 +17,33 @@ class NavBar extends StatelessWidget {
           MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
             ..add(const LoadMatchesEvent('')),
       child: Drawer(
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             BlocBuilder<MatchesBloc, MatchesState>(builder: (context, state) {
               if (state is MatchesLoadingState) {
-                return onLoading(context);
+                return Column(
+                  children: [
+                    onLoading(context),
+                    NavList(context, null),
+                  ],
+                );
               }
 
               if (state is MatchesLoadedState) {
-                return drawerHeader(context, state);
+                return Column(
+                  children: [
+                    drawerHeader(context, state),
+                    NavList(context, state),
+                  ],
+                );
               }
               if (state is MatchesErrorState) {
-                return const Text('Error');
+                return Text(state.error);
               }
               return const Text('Unknown');
             }),
-            ListTile(
-              leading: Icon(Icons.group, color: Theme.of(context).primaryColor),
-              title: Text('Liste des utilisateurs',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).primaryColorLight)),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/utilisateurs');
-              },
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey,
-              endIndent: 20,
-              indent: 20,
-            ),
-            ListTile(
-              leading:
-                  Icon(Icons.person, color: Theme.of(context).primaryColor),
-              title: Text('Mon profil',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).primaryColorLight)),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/profile');
-              },
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey,
-              endIndent: 20,
-              indent: 20,
-            ),
-            ListTile(
-              leading: Icon(Icons.info, color: Theme.of(context).primaryColor),
-              title: Text('A propos',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).primaryColorLight)),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/about');
-              },
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey,
-              endIndent: 20,
-              indent: 20,
-            ),
-            ListTile(
-              leading: Icon(Icons.phone, color: Theme.of(context).primaryColor),
-              title: Text('Contact',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).primaryColorLight)),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/contact');
-              },
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey,
-              endIndent: 20,
-              indent: 20,
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.38,
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app,
-                  size: 30, color: Theme.of(context).primaryColor),
-              title: Text('Déconnexion',
-                  style: TextStyle(
-                      fontSize: 15, color: Theme.of(context).primaryColor)),
-              onTap: () async {
-                await deleteToken();
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/home');
-              },
-            ),
           ],
         ),
       ),
@@ -129,18 +52,6 @@ class NavBar extends StatelessWidget {
 
   UserAccountsDrawerHeader onLoading(BuildContext context) {
     return UserAccountsDrawerHeader(
-      accountName: const Text(
-        'carlock',
-        style: TextStyle(color: Colors.transparent, fontSize: 20),
-      ),
-      arrowColor: Colors.black,
-      accountEmail: const Text('_'),
-      currentAccountPicture: const CircleAvatar(
-        backgroundColor: Colors.grey,
-        backgroundImage: AssetImage('assets/images/no_image.png'),
-        key: ValueKey('no_image.png'),
-        radius: 25,
-      ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         image: const DecorationImage(
@@ -148,10 +59,18 @@ class NavBar extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
+      accountEmail: null,
+      accountName: null,
+      currentAccountPicture: const CircularProgressIndicator(),
+      otherAccountsPictures: null,
+      onDetailsPressed: null,
     );
   }
 
   UserAccountsDrawerHeader drawerHeader(BuildContext context, state) {
+    Results matches = state.matches.results![0];
+
+    String? imageUrl = matches.userPicture;
     return UserAccountsDrawerHeader(
       accountName: const Text(
         'carlock',
@@ -162,25 +81,21 @@ class NavBar extends StatelessWidget {
         style: const TextStyle(
           fontSize: 18,
         ),
-        child: AnimatedTextKit(totalRepeatCount: 1, animatedTexts: [
-          TypewriterAnimatedText(
-              'Salut ${state.user.user[0].toUpperCase() + state.user.user.substring(1)}'),
-          TypewriterAnimatedText('carlock est un service de ...'),
-        ]),
+        child: Text('salut ' + matches.userLastName!),
       ),
       currentAccountPicture: CircleAvatar(
-        child: 1 == 3
+        child: imageUrl != null && imageUrl != ''
             ? ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: state.user.user!,
+                  imageUrl: imageUrl,
                   placeholder: (context, url) =>
                       const Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                   fit: BoxFit.cover,
                   height: 90,
                   width: 90,
-                  key: const ValueKey('user_image'),
-                  cacheKey: 'user_image',
+                  key: const ValueKey('user_image1'),
+                  cacheKey: 'user_image1',
                 ),
               )
             : const CircleAvatar(
@@ -197,6 +112,111 @@ class NavBar extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
+    );
+  }
+}
+
+class NavList extends StatelessWidget {
+  BuildContext context;
+  dynamic state;
+  NavList(this.context, this.state, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (state == null || state.can_sync_location)
+          Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.group, color: Colors.orange[700]),
+                title: Text('Liste des utilisateurs',
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).primaryColorDark)),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed('/utilisateurs');
+                },
+              ),
+              Divider(
+                height: 1,
+                thickness: 1,
+                color: Colors.grey.shade200,
+                endIndent: 20,
+                indent: 20,
+              )
+            ],
+          ),
+        ListTile(
+          leading: Icon(Icons.person, color: Colors.blue[400]),
+          title: Text('Mon profil',
+              style: TextStyle(
+                  fontSize: 15, color: Theme.of(context).primaryColorDark)),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed('/profile');
+          },
+        ),
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: Colors.grey.shade200,
+          endIndent: 20,
+          indent: 20,
+        ),
+        ListTile(
+          leading: Icon(Icons.info, color: Colors.green[400]),
+          title: Text('A propos',
+              style: TextStyle(
+                  fontSize: 15, color: Theme.of(context).primaryColorDark)),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed('/about');
+          },
+        ),
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: Colors.grey.shade200,
+          endIndent: 20,
+          indent: 20,
+        ),
+        ListTile(
+          leading: Icon(Icons.phone, color: Colors.red[400]),
+          title: Text('Contact',
+              style: TextStyle(
+                  fontSize: 15, color: Theme.of(context).primaryColorDark)),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed('/contact');
+          },
+        ),
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: Colors.grey.shade200,
+          endIndent: 20,
+          indent: 20,
+        ),
+        SizedBox(
+          height: (state == null || state.can_sync_location)
+              ? MediaQuery.of(context).size.height * 0.38
+              : MediaQuery.of(context).size.height * 0.453,
+        ),
+        ListTile(
+          leading: Icon(Icons.exit_to_app,
+              size: 30, color: Theme.of(context).primaryColor),
+          title: Text('Déconnexion',
+              style: TextStyle(
+                  fontSize: 15, color: Theme.of(context).primaryColor)),
+          onTap: () async {
+            await deleteToken();
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed('/home');
+          },
+        ),
+      ],
     );
   }
 }

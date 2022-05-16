@@ -16,9 +16,13 @@
    <application
         android:label="carlock"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDT0oCe1S8JfXqCjXdyCKJCM1MzhthB3us"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:value="@mipmap/ic_launcher" />
         
         <activity
             android:name=".MainActivity"

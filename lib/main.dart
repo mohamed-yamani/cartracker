@@ -33,30 +33,25 @@ var notification_type_test = '';
 // 29:07:18:32:0B:A7:40:2B:94:87:95:B8:3C:35:66:57:2D:07:9C:DD computer
 //Receive message when app in background solution for on message
 Future<String> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print(message.data.toString());
-  print(message.notification!.title);
-  String notification_type = message.data["type_notification"].toString();
-  print("type_notification : " + notification_type.toString());
-
-  notification_type_test = notification_type;
-  return notification_type;
+  // ! you need to check if message notification body is not null and message data if it is
+  String notificationType = message.data["type_notification"].toString();
+  notification_type_test = notificationType;
+  return notificationType;
 }
 
 Future<void> main() async {
-  // bool hasPermissions = await FlutterBackground.hasPermissions;
   BackgroundJobs().initializeBackgroundJobs();
-  // flutter splash
-  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   bool isLoggedIn = true;
 
   await Hive.initFlutter(); //!hive init
   Hive.registerAdapter(TokenModelAdapter()); //!hive register adapter
-  // await Firebase.initializeApp();
-  // // above firebase
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   // ! firebase init
+
+  // firebase init
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   try {
     TokenModel? user = await getToken();
@@ -91,14 +86,82 @@ class _MyAppState extends State<MyApp> {
   final MatchesBloc matchesBloc = MatchesBloc(MatchesServices());
   final UtilisateursBloc utilisateursBloc =
       UtilisateursBloc(UtilisateursServices());
-
   final ProfileBloc profileBloc = ProfileBloc(UserMeServices());
-  My_Localisation myLocalisation = My_Localisation();
+
+  MyLocalisation myLocalisation = MyLocalisation();
   final Future<FirebaseApp> firebaseInit = initializeFirebaseApp();
 
   @override
   void initState() {
     myLocalisation.updateLocation();
+
+    Future.delayed(const Duration(milliseconds: 700)).then((_) async {
+      if (notification_type_test == "commande") {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Sending commande"),
+        ));
+        Future.delayed(const Duration(milliseconds: 700)).then((_) {
+          // navigatorKey.currentState?.pushNamed("Oreders");
+        });
+      }
+
+      final firebaseToken =
+          FirebaseMessaging.instance.getToken().then((value) {});
+      FirebaseMessaging.instance.getInitialMessage().then((message) async {
+        if (message != null) {
+          print(message.data.toString());
+          print(message.notification!.title);
+          String notification_type =
+              message.data["type_notification"].toString();
+          print("type_notification : " + notification_type.toString());
+          notification_type_test = notification_type;
+        }
+      });
+    });
+
+    FirebaseMessaging.onMessage.listen((message) {
+      if (message.notification != null) {
+        print(message.notification!.title.toString() + " message body ...");
+        print(message.notification!.body.toString() + " message body ...");
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      // log('A new onMessageOpenedApp event was published!');
+      // log('message data body : ' + message.notification!.body.toString());
+      // log('message data type ------- bach ' +
+      //     message.data["type_notification"].toString());
+      var notification_type = message.data["type_notification"].toString();
+      if (notification_type == "commande") {
+        bool is_loged = await true;
+        if (is_loged) {
+          Future.delayed(const Duration(milliseconds: 700)).then((_) {
+            // navigatorKey.currentState?.pushNamed("Oreders");
+          });
+        } else {
+          Future.delayed(const Duration(milliseconds: 700)).then((_) async {
+            // await navigatorKey.currentState?.pushNamed("Authentication");
+            // is_loged = await islogded();
+            // if (is_loged) {
+            //   Future.delayed(const Duration(milliseconds: 700)).then((_) {
+            //     // navigatorKey.currentState?.pushNamed("Oreders");
+            //   });
+            // }
+          });
+        }
+      } else if (notification_type == 'nouvelle_collection' ||
+          notification_type == "promotion") {
+        // MenuPageScreenPosition = menu.length - 1;
+
+        if (notification_type == "promotion") {
+          // MenuPageScreenPosition = menu.length - 2;
+        }
+        Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+          // print(menu.toString() + ' menu Toooooo String ');
+          // navigatorKey.currentState?.pushNamed("MenuPageScreen");
+        });
+      }
+    });
+
     super.initState();
   }
 
@@ -126,7 +189,6 @@ class _MyAppState extends State<MyApp> {
                 RepositoryProvider<UserMeServices>(
                   create: (context) => UserMeServices(),
                 ),
-                
               ],
               child: MaterialApp(
                 title: 'carlock',

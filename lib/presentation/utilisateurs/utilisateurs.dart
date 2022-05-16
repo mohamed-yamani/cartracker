@@ -261,7 +261,7 @@ class UtilisateursCard extends StatelessWidget {
               ? PositionAndLiveStream(result: result)
               : Text(
                   result.lastIpUp != null
-                      ? 'Dernière connexion ${DateFormat('dd MMMM yyyy, à HH:mm').format(DateTime.parse(result.lastIpUp!))}'
+                      ? 'Dernière connexion ${DateFormat('dd MMMM yyyy à HH:mm').format(DateTime.parse(result.lastIpUp!))}'
                       : 'Utilisateur jamais connecté',
                   style: TextStyle(
                       color: Colors.grey[600],
@@ -387,12 +387,20 @@ class UserCircleAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const CircleAvatar(
-          backgroundColor: Colors.grey,
-          backgroundImage: AssetImage('assets/images/no_image.png'),
-          key: ValueKey('no_image.png'),
-          radius: 35,
-        ),
+        result.picture == null
+            ? const CircleAvatar(
+                backgroundColor: Colors.grey,
+                backgroundImage: AssetImage('assets/images/no_image.png'),
+                key: ValueKey('no_image.png'),
+                radius: 35,
+              )
+            : CircleAvatar(
+                backgroundColor: Colors.grey,
+                backgroundImage: CachedNetworkImageProvider('${result.picture}',
+                    cacheKey: '${result.picture}'),
+                key: ValueKey('${result.picture}'),
+                radius: 35,
+              ),
         Positioned(
             right: 0,
             top: 0,

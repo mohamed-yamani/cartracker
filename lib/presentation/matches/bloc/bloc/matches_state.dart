@@ -17,15 +17,21 @@ class MatchesLoadingState extends MatchesState {
 class MatchesLoadedState extends MatchesState {
   final MatchesModel matches;
   final TokenModel? user;
+  final List<dynamic> permissionList;
+  final bool can_sync_location;
 
   const MatchesLoadedState(
     this.matches,
     this.user,
+    this.permissionList,
+    this.can_sync_location,
   );
 
   @override
   List<Object?> get props => [
         matches,
+        user,
+        permissionList,
       ];
 }
 

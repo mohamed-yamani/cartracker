@@ -7,9 +7,11 @@ import 'package:carlock/services/matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:intl/intl.dart';
 import 'package:print_color/print_color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share/share.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class MatchesPage extends StatefulWidget {
   const MatchesPage({Key? key}) : super(key: key);
@@ -87,53 +89,53 @@ class _MatchesPageState extends State<MatchesPage> {
                           color: Colors.white,
                           size: 25,
                         );
-                        custombar = TextField(
-                          textInputAction: TextInputAction.search,
-                          keyboardType: TextInputType.number,
-                          onSubmitted: (value) {
-                            Print.red('Recherche par date');
+                        // custombar = TextField(
+                        //   textInputAction: TextInputAction.search,
+                        //   keyboardType: TextInputType.number,
+                        //   onSubmitted: (value) {
+                        //     Print.red('Recherche par date');
 
-                            BlocProvider.of<MatchesBloc>(context)
-                                .add(MatchesSearchDateEvent(
-                              '',
-                              value,
-                            ));
-                          },
-                          cursorColor: Colors.white,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Recherche par date',
-                            hintStyle: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white.withOpacity(0.6),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        );
+                        //     BlocProvider.of<MatchesBloc>(context)
+                        //         .add(MatchesSearchDateEvent(
+                        //       '',
+                        //       value,
+                        //     ));
+                        //   },
+                        //   cursorColor: Colors.white,
+                        //   style: const TextStyle(
+                        //     fontSize: 15,
+                        //     fontWeight: FontWeight.bold,
+                        //     color: Colors.white,
+                        //     fontStyle: FontStyle.italic,
+                        //   ),
+                        //   decoration: InputDecoration(
+                        //     hintText: 'Recherche par date',
+                        //     hintStyle: TextStyle(
+                        //       fontSize: 13,
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Colors.white.withOpacity(0.6),
+                        //     ),
+                        //     border: InputBorder.none,
+                        //   ),
+                        // );
                       } else {
-                        BlocProvider.of<MatchesBloc>(context)
-                            .add(const MatchesSearchDateEvent(
-                          '',
-                          '',
-                        ));
+                        // BlocProvider.of<MatchesBloc>(context)
+                        //     .add(MatchesSearchDateEvent(
+                        //   '',
+                        //   '',
+                        // ));
                         customIcon = const Icon(
                           Icons.date_range,
                           color: Colors.white,
                           size: 25,
                         );
-                        custombar = const Text(
-                          'HISTORIQUE DES MATCHES',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
+                        // custombar = const Text(
+                        //   'HISTORIQUE DES MATCHES',
+                        //   style: TextStyle(
+                        //     fontSize: 13,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // );
                       }
                     });
                     // showSearch(context: context, delegate: SearchDelegate());
@@ -211,8 +213,24 @@ class _MatchesPageState extends State<MatchesPage> {
               },
             ),
           ],
-          // bottom: const PreferredSize(
-          //     child: Text('test'), preferredSize: Size.fromHeight(50)),
+          // bottom: (customIcon.icon == Icons.close)
+          //     ? PreferredSize(
+          //         child: Positioned(
+          //           left: 0,
+          //           top: 80,
+          //           right: 0,
+          //           bottom: 0,
+          //           child: SfDateRangePicker(
+          //             // onSelectionChanged: _onSelectionChanged,
+          //             selectionMode: DateRangePickerSelectionMode.range,
+          //             initialSelectedRange: PickerDateRange(
+          //                 DateTime.now().subtract(const Duration(days: 4)),
+          //                 DateTime.now().add(const Duration(days: 3))),
+          //           ),
+          //         ),
+          //         preferredSize:
+          //             Size.fromHeight(MediaQuery.of(context).size.height * .45))
+          //     : PreferredSize(child: Container(), preferredSize: Size.zero),
         ),
         body: OfflineBuilder(
           connectivityBuilder: (
@@ -223,7 +241,54 @@ class _MatchesPageState extends State<MatchesPage> {
             final bool connected = connectivity != ConnectivityResult.none;
 
             if (connected) {
-              return OurBody();
+              return Stack(
+                children: [
+                  OurBody(),
+                  if (customIcon.icon == Icons.close)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .45,
+                      width: MediaQuery.of(context).size.width,
+                      child: SfDateRangePicker(
+                        showActionButtons: true,
+                        onSubmit: (args) {
+                          Print.green(args.toString());
+                          final date = args != null ? args.toString() : '';
+                          // Print.green(range.endDate.toString());
+                          BlocProvider.of<MatchesBloc>(context)
+                              .add(MatchesSearchDateEvent(
+                            '',
+                            date,
+                          ));
+                          setState(() {
+                            customIcon = const Icon(
+                              Icons.date_range,
+                              color: Colors.white,
+                              size: 25,
+                            );
+                          });
+                        },
+                        onCancel: () {
+                          setState(() {
+                            customIcon = const Icon(
+                              Icons.date_range,
+                              color: Colors.white,
+                              size: 25,
+                            );
+                          });
+                        },
+                        backgroundColor: Colors.white,
+                        cancelText: 'Annuler',
+                        confirmText: 'Confirmer',
+                        initialDisplayDate: DateTime.now(),
+                        // initialSelectedRange: PickerDateRange(
+                        //   DateTime.now().subtract(const Duration(days: 4)),
+                        //   DateTime.now().add(const Duration(days: 3)),
+                        // ),
+                        selectionMode: DateRangePickerSelectionMode.single,
+                      ),
+                    )
+                ],
+              );
             }
             return Container(
               color: Colors.white,
@@ -371,6 +436,7 @@ class OurBody extends StatelessWidget {
 
 class _getCard extends StatelessWidget {
   late Results result;
+
   _getCard(this.result);
   @override
   Widget build(BuildContext context) {
@@ -392,9 +458,11 @@ class _getCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          result.createdAt.toString().substring(0, 10) +
-                              ' à ' +
-                              result.createdAt.toString().substring(11, 16),
+                          DateFormat('dd MMMM yyyy à HH:mm').format(
+                              DateTime.parse(result.createdAt.toString())),
+                          // result.createdAt.toString().substring(0, 10) +
+                          //     ' à ' +
+                          //     result.createdAt.toString().substring(11, 16),
                           style: const TextStyle(
                               color: Colors.black, fontSize: 14),
                         ),
@@ -417,8 +485,8 @@ class _getCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 CachedNetworkImage(
-                  key: Key(result.id.toString()),
-                  cacheKey: result.id.toString(),
+                  key: Key(result.picture.toString()),
+                  cacheKey: result.picture.toString(),
                   imageUrl: result.picture ??
                       'https://us.123rf.com/450wm/infadel/infadel1712/infadel171200119/91684826-a-black-linear-photo-camera-logo-like-no-image-available-.jpg',
                   placeholder: (context, url) =>
@@ -433,13 +501,13 @@ class _getCard extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        result.picture != null && 1 > 2
+                        result.userPicture != null && result.userPicture != ''
                             ? CircleAvatar(
                                 backgroundColor: Colors.grey,
                                 backgroundImage: CachedNetworkImageProvider(
-                                    result.picture!,
-                                    cacheKey: result.id.toString() + 'picture'),
-                                key: ValueKey(result.id.toString() + 'picture'),
+                                    '${result.userPicture}',
+                                    cacheKey: '${result.userPicture}'),
+                                key: ValueKey('${result.userPicture}'),
                                 radius: 25,
                               )
                             : const CircleAvatar(

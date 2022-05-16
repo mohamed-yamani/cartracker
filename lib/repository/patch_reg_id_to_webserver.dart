@@ -12,6 +12,7 @@ class RegIdToWebserver {
     //update localisation if localisation is changed and active
     Print.yellow('User information updated');
     TokenModel? tokenModel = await getToken();
+    Print.green(regId);
     try {
       data = await http.patch(
         // Uri.parse('https://matricule.icebergtech.net/api/user/me/'),

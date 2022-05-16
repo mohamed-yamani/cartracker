@@ -1,11 +1,11 @@
 [
     {
-        "merged": "C:\\Users\\1337\\Desktop\\carlock\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\1337\\Desktop\\carlock\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
-    },
-    {
         "merged": "C:\\Users\\1337\\Desktop\\carlock\\build\\app\\intermediates\\res\\merged\\debug\\drawable_ic_launcher.png.flat",
         "source": "C:\\Users\\1337\\Desktop\\carlock\\android\\app\\src\\main\\res\\drawable\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\1337\\Desktop\\carlock\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\1337\\Desktop\\carlock\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
         "merged": "C:\\Users\\1337\\Desktop\\carlock\\build\\app\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
