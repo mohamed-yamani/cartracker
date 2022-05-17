@@ -8,6 +8,7 @@ C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/ass
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/icon.png
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/logo.png
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/marker.png
+C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/no-image.jpg
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/no-internet.png
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/no_image.png
 C:/Users/1337/Desktop/carlock/build/windows/runner/Debug/data/flutter_assets/assets/images/profile_test.jpg

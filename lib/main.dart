@@ -40,7 +40,7 @@ Future<String> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
-  BackgroundJobs().initializeBackgroundJobs();
+  // BackgroundJobs().initializeBackgroundJobs();
   bool isLoggedIn = true;
 
   await Hive.initFlutter(); //!hive init
@@ -88,12 +88,12 @@ class _MyAppState extends State<MyApp> {
       UtilisateursBloc(UtilisateursServices());
   final ProfileBloc profileBloc = ProfileBloc(UserMeServices());
 
-  MyLocalisation myLocalisation = MyLocalisation();
+  // MyLocalisation myLocalisation = MyLocalisation();
   final Future<FirebaseApp> firebaseInit = initializeFirebaseApp();
 
   @override
   void initState() {
-    myLocalisation.updateLocation();
+    // myLocalisation.updateLocation();
 
     Future.delayed(const Duration(milliseconds: 700)).then((_) async {
       if (notification_type_test == "commande") {

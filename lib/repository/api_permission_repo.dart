@@ -11,7 +11,7 @@ class PermisionRepository {
     try {
       TokenModel? tokenModel = await getToken();
       final response = await http.get(
-          Uri.parse('https://matricule.icebergtech.net/api/permission'),
+          Uri.parse('https://platereader.icebergtech.net/api/permission'),
           headers: {
             'Accept': 'application/json',
             "authorization": "Bearer ${tokenModel?.token}",

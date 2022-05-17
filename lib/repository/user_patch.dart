@@ -29,9 +29,11 @@ class UserPatchLatLng {
           "authorization": "Bearer ${tokenModel?.token}",
         },
       );
+      Print.yellow('data.code: ${data.statusCode}');
       print(data);
-      Print.yellow(data.body);
+      Print.red(data.body);
     } catch (e) {
+      Print.red(e);
       throw e.toString();
     }
   }

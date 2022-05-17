@@ -15,7 +15,7 @@ class RegIdToWebserver {
     Print.green(regId);
     try {
       data = await http.patch(
-        // Uri.parse('https://matricule.icebergtech.net/api/user/me/'),
+        // Uri.parse('https://platereader.icebergtech.netapi/user/me/'),
         Uri.parse('$myUrl/api/user/me/'),
         body: {
           "reg_id": regId,

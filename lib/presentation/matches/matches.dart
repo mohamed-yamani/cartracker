@@ -45,7 +45,7 @@ class _MatchesPageState extends State<MatchesPage> {
     return BlocProvider(
       create: (context) =>
           MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
-            ..add(const LoadMatchesEvent('')),
+            ..add(const LoadMatchesEvent('', true)),
       child: Scaffold(
         drawer: BlocProvider.value(
           value: MatchesBloc(MatchesServices()),

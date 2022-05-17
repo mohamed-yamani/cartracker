@@ -59,7 +59,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           key: const ValueKey('user_image1'),
                           cacheKey: 'user_image1',
                         )
-                      : const Center(child: Text('No image')),
+                      : Image.asset(
+                          'assets/images/no-image.jpg',
+                          fit: BoxFit.cover,
+                          height: 90,
+                          width: 90,
+                          key: const ValueKey('user_image2'),
+                        ),
                 ),
 
                 FractionallySizedBox(
@@ -77,8 +83,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
-                    maxHeight: MediaQuery.of(context).size.height * 0.60,
-                    minHeight: MediaQuery.of(context).size.height * 0.25,
+                    maxHeight: MediaQuery.of(context).size.height * 0.29,
+                    minHeight: MediaQuery.of(context).size.height * 0.27,
                     // panel: Container(color: Colors.red),
                     body: GestureDetector(
                       onTap: () {
@@ -166,37 +172,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 )),
             // SizedBox(height: MediaQuery.of(context).size.height * ),
 
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: 1 == 1
-                  ? GoogleMap(
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        bearing: 0,
-                        target: LatLng(double.parse(userMe.latitude.toString()),
-                            double.parse(userMe.longitude.toString())),
-                        tilt: 59.440717697143555,
-                        zoom: 10.4746,
-                      ),
-                      markers: {
-                        Marker(
-                          markerId: MarkerId(userMe.lastName.toString()),
-                          position: LatLng(
-                              double.parse(userMe.latitude.toString()),
-                              double.parse(userMe.longitude.toString())),
-                          infoWindow: InfoWindow(
-                            title: userMe.lastName.toString(),
-                            snippet: userMe.firstName.toString(),
-                          ),
-                        ),
-                      },
-                      // onMapCreated: (GoogleMapController controller) {
-                      //   _googleMapController = controller;
-                      // },
-                    )
-                  : const Text('data'),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 5),
+            //   height: MediaQuery.of(context).size.height * 0.3,
+            // ),
             // const Center(
             //   child: Text('More info', style: TextStyle(fontSize: 20)),
             // )

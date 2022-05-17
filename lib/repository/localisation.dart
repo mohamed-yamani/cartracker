@@ -22,53 +22,50 @@ class MyLocalisation {
   bool can_sync_location = false;
 
   Future<void> updateLocation() async {
-    try {
-      permissionList = await PermisionRepository().getPermissionRepo();
-      Print.green(permissionList.toString());
-    } catch (e) {
-      throw '$e';
-      // print(e);
-    }
-    Print.yellow(permissionList.toString());
-
-    permissionList.forEach((element) {
-      Print.yellow(element.toString());
-      if (element['code'] == 'can_sync_location') {
-        Print.red('alert can_sync_location is true');
-        can_sync_location = true;
-      }
-    });
-    if (!can_sync_location) return;
-
     location = await _location.getLocation();
-    _location.changeSettings(
-      interval: 1500,
-      // distanceFilter: 10,
-    );
+    PermissionStatus locationUserHasPermission =
+        await _location.hasPermission();
+    if (locationUserHasPermission == PermissionStatus.granted) {
+      Print.red(
+          'location --------------------------------------: $locationUserHasPermission');
+      _location.changeSettings(
+        interval: 1500,
+        // distanceFilter: 10,
+      );
 
-    locationSubscription = _location.onLocationChanged.listen((location) async {
-      try {
-        // bool localisationChanged = await updateLocationOnlyIfLocationChanges
-        //     .handleLocationUpdate(Localisation(
-        //         locationx.latitude.toString(), locationx.longitude.toString()));
-        // localisationChanged = true;
-        Print.red('location updated --- --- success');
-        Print.green((location.latitude!).toString());
-        Print.green((location.longitude!).toString());
-        Print.red('location updated --- --- success');
+      locationSubscription =
+          _location.onLocationChanged.listen((location) async {
+        try {
+          // bool localisationChanged = await updateLocationOnlyIfLocationChanges
+          //     .handleLocationUpdate(Localisation(
+          //         locationx.latitude.toString(), locationx.longitude.toString()));
+          // localisationChanged = true;
+          Print.red('location updated --- --- success');
+          Print.green((location.latitude!).toString());
+          Print.green((location.longitude!).toString());
+          Print.red('location updated --- --- success');
 
-        await userPatchLatLng!.updateCurrentUserInformation(
-          LatLng(
-            double.parse((location.latitude!).toString()),
-            double.parse((location.longitude!).toString()),
-          ),
-        );
-        // updateCarPosition();
-        Print.red('location updated');
-      } catch (e) {
-        Print.red('location not updated');
-      }
-    });
+          await userPatchLatLng!.updateCurrentUserInformation(
+            LatLng(
+              double.parse((location.latitude!).toString()),
+              double.parse((location.longitude!).toString()),
+            ),
+          );
+          // updateCarPosition();
+          Print.red('location updated');
+        } catch (e) {
+          Print.red('location not updated');
+        }
+      });
+    } else if (locationUserHasPermission == PermissionStatus.denied) {
+      Print.red(
+          'location --------------------------------------: $locationUserHasPermission');
+      _location.requestPermission();
+    } else {
+      Print.red(
+          'location --------------------------------------: $locationUserHasPermission');
+      _location.requestPermission();
+    }
 
     // updateZoom = true;
   }

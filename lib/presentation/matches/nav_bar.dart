@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carlock/model/matches_model.dart';
+import 'package:carlock/model/token.dart';
+import 'package:carlock/model/user_me_model.dart';
 import 'package:carlock/presentation/matches/bloc/bloc/matches_bloc.dart';
 import 'package:carlock/repository/save_get_token.dart';
 import 'package:carlock/services/matches.dart';
@@ -15,7 +17,7 @@ class NavBar extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           MatchesBloc(RepositoryProvider.of<MatchesServices>(context))
-            ..add(const LoadMatchesEvent('')),
+            ..add(const LoadMatchesEvent('', false)),
       child: Drawer(
         backgroundColor: Colors.white,
         child: ListView(
@@ -69,6 +71,7 @@ class NavBar extends StatelessWidget {
 
   UserAccountsDrawerHeader drawerHeader(BuildContext context, state) {
     Results matches = state.matches.results![0];
+    TokenModel user = state.user;
 
     String? imageUrl = matches.userPicture;
     return UserAccountsDrawerHeader(
@@ -81,7 +84,8 @@ class NavBar extends StatelessWidget {
         style: const TextStyle(
           fontSize: 18,
         ),
-        child: Text('salut ' + matches.userLastName!),
+        child: Text('salut ' + user.user,
+            style: const TextStyle(color: Colors.black)),
       ),
       currentAccountPicture: CircleAvatar(
         child: imageUrl != null && imageUrl != ''
@@ -125,7 +129,7 @@ class NavList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (state == null || state.can_sync_location)
+        if (state == null || state.canViewAllUsers)
           Column(
             children: [
               ListTile(
@@ -200,7 +204,7 @@ class NavList extends StatelessWidget {
           indent: 20,
         ),
         SizedBox(
-          height: (state == null || state.can_sync_location)
+          height: (state == null || state.canViewAllUsers)
               ? MediaQuery.of(context).size.height * 0.38
               : MediaQuery.of(context).size.height * 0.453,
         ),

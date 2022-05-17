@@ -17,6 +17,8 @@ class AuthRepository {
     }
 
     try {
+      Print.green('username: $username');
+      Print.green('password: $password');
       response = await http.post(
         Uri.parse(urlLogin),
         headers: {},
@@ -36,7 +38,8 @@ class AuthRepository {
     } else {
       // return false;
       Print.green('error ------------------------------------');
-      throw Exception('Invalid username or password');
+      Print.red(response.body);
+      throw Exception(response.body);
     }
   }
 }

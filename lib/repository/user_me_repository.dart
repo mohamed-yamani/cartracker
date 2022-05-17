@@ -12,7 +12,7 @@ class UserMeRepository {
     try {
       TokenModel? tokenModel = await getToken();
       final response = await http.get(
-          Uri.parse('https://matricule.icebergtech.net/api/user/me'),
+          Uri.parse('https://platereader.icebergtech.net/api/user/me'),
           headers: {
             'Accept': 'application/json',
             "authorization": "Bearer ${tokenModel?.token}",

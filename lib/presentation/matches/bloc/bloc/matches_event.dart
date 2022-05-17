@@ -6,14 +6,15 @@ abstract class MatchesEvent extends Equatable {
 
 class LoadMatchesEvent extends MatchesEvent {
   final String username;
-
-  const LoadMatchesEvent(this.username);
+  final bool needLocation;
+  const LoadMatchesEvent(this.username, this.needLocation);
   @override
   List<Object?> get props => [];
 }
 
 class MatchesRefreshEvent extends MatchesEvent {
   final String username;
+  
 
   const MatchesRefreshEvent(this.username);
   @override
@@ -23,6 +24,7 @@ class MatchesRefreshEvent extends MatchesEvent {
 class MatchesSearchDateEvent extends MatchesEvent {
   final String username;
   String searchDate;
+  
 
   MatchesSearchDateEvent(this.username, this.searchDate);
   @override
@@ -32,6 +34,7 @@ class MatchesSearchDateEvent extends MatchesEvent {
 class MatchesSearchRegisterNumberEvent extends MatchesEvent {
   final String username;
   final String searchRegisterNumber;
+  
 
   const MatchesSearchRegisterNumberEvent(
       this.username, this.searchRegisterNumber);
